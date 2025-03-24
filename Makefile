@@ -1,9 +1,12 @@
 NAME = minishell
 
-SRCS = main.c
+SRCS = main.c\
+		ft_printf.c \
+		ft_putstr.c \
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
+RED = -lreadline
 RM = rm -f
 
 OBJS = $(SRCS:.c=.o)
@@ -11,9 +14,9 @@ OBJS = $(SRCS:.c=.o)
 all: $(NAME) 
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@ $(RED)
 
-%.o: %.c main.h
+%.o: %.c minishell.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
