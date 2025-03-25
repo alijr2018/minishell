@@ -1,12 +1,27 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/03/25 10:51:21 by abrami            #+#    #+#              #
+#    Updated: 2025/03/25 10:51:34 by abrami           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+
 NAME = minishell
 
-SRCS = main.c\
+SRCS = minishell.c\
 		ft_printf.c \
 		ft_putstr.c \
+		ft_split.c \
+		exec.c \
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
-RED = -lreadline
+# CFLAGS = -Wall -Wextra -Werror
+RED = -lreadline 
 RM = rm -f
 
 OBJS = $(SRCS:.c=.o)

@@ -6,12 +6,17 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 17:26:03 by abrami            #+#    #+#             */
-/*   Updated: 2025/03/24 15:28:40 by abrami           ###   ########.fr       */
+/*   Updated: 2025/03/25 08:58:37 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	ft_putchar(char c)
+{
+	write (1, &c, 1);
+	return (1);
+}
 
 static int	type_print(char c, va_list args)
 {
