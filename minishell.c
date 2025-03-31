@@ -12,6 +12,12 @@
 
 #include "minishell.h"
 
+/**
+**how my code work is get input with readline then pass directly to execve and then search for
+** the command if it is run other wise command not found , to implimented |(pipe) and the other
+**  i need to parse mean i have to search for the implimentation if i found it i have to run the
+** command given diff way .
+*/
 int	ft_strcmp(char *srt, char *str)
 {
 	int	i;
