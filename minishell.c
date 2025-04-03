@@ -169,13 +169,21 @@ void handle_redirections_and_pipes(char **args)
     ft_run(args);
 }
 
-
+void    lis(int i)
+{
+    (void)i;
+    ft_printf("\n");  
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
+}
 
 int	main(void)
 {
 	char	*input;
 	char	**search;
-	
+
+	signal(SIGINT, lis);
 	while (1)
 	{
 		input = read_full_command();
@@ -193,7 +201,7 @@ int	main(void)
 			add_history(input);
 		search = ft_split(input, ' ');
 		handle_redirections_and_pipes(search);
-		// ft_run(search);
+		ft_run(search);
 		free(input);
 	}
 	rl_clear_history();
