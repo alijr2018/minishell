@@ -18,7 +18,8 @@
 **  i need to parse mean i have to search for the implimentation if i found it i have to run the
 ** command given diff way .
 */
-int	ft_strcmp(char *srt, char *str)
+
+int ft_strcmp(char *srt, char *str)
 {
 	int	i;
 
@@ -27,6 +28,39 @@ int	ft_strcmp(char *srt, char *str)
 		i++;
 	return (str[i] - srt[i]);
 }
+
+t_command *parse_single_command(char *segment) {
+    t_command *cmd = malloc(sizeof(t_command));
+    cmd->args = malloc(sizeof(char *) * MAX_ARGS);
+    cmd->input_file = NULL;
+    cmd->output_file = NULL;
+    cmd->heredoc_delimiter = NULL;
+    cmd->append_output = 0;
+
+    char **tokens = ft_split(segment, ' ');
+    int i = 0, j = 0;
+
+    while (tokens[i]) {
+        if (!strcmp(tokens[i], "<") && tokens[i + 1]) {
+            cmd->input_file = ft_strdup(tokens[++i]);
+        } else if (!strcmp(tokens[i], "<<") && tokens[i + 1]) {
+            cmd->heredoc_delimiter = ft_strdup(tokens[++i]);
+        } else if (!strcmp(tokens[i], ">") && tokens[i + 1]) {
+            cmd->output_file = ft_strdup(tokens[++i]);
+            cmd->append_output = 0;
+        } else if (!strcmp(tokens[i], ">>") && tokens[i + 1]) {
+            cmd->output_file = ft_strdup(tokens[++i]);
+            cmd->append_output = 1;
+        } else {
+            cmd->args[j++] = ft_strdup(tokens[i]);
+        }
+        i++;
+    }
+    cmd->args[j] = NULL;
+    free(tokens);
+    return cmd;
+}
+
 
 static void	ft_exit(char *input)
 {
@@ -80,93 +114,103 @@ char *read_full_command(void)
     }
     return (input);
 }
-static void ft_run(char **search)
-{
-    pid_t pid;
-    pid = fork();
 
-    if (pid == 0)
-    {
-        exec(search); // Execute the command
-        // perror("execve failed");
-        // exit(1);
-    }
-    else if (pid > 0)
-    {
-        wait(NULL); // Wait for child process to finish
-    }
-    else
-    {
-        perror("Fork failed");
+
+void handle_input(t_command *cmd) {
+    if (cmd->heredoc_delimiter) {
+        int pipefd[2];
+        pipe(pipefd);
+        char *line;
+        while (1)
+        {
+            line = readline("> ");
+            if (!line || !strcmp(line, cmd->heredoc_delimiter)) {
+                free(line);
+                break;
+            }
+            write(pipefd[1], line, strlen(line));
+            write(pipefd[1], "\n", 1);
+            free(line);
+        }
+        close(pipefd[1]);
+        dup2(pipefd[0], STDIN_FILENO);
+        close(pipefd[0]);
+    } else if (cmd->input_file) {
+        int fd = open(cmd->input_file, O_RDONLY);
+        if (fd == -1) {
+            perror("input");
+            exit(1);
+        }
+        dup2(fd, STDIN_FILENO);
+        close(fd);
     }
 }
 
-void handle_pipes(char **args) {
-    int i = 0;
-    int pipe_fd[2];
+void handle_output(t_command *cmd) {
+    if (cmd->output_file) {
+        int fd = open(cmd->output_file,
+                      O_WRONLY | O_CREAT | (cmd->append_output ? O_APPEND : O_TRUNC), 0644);
+        if (fd == -1) {
+            perror("output");
+            exit(1);
+        }
+        dup2(fd, STDOUT_FILENO);
+        close(fd);
+    }
+}
+
+void exec_command(t_command *cmd) {
+    handle_input(cmd);
+    handle_output(cmd);
+    exec(cmd->args);
+}
+
+
+
+void execute_pipeline(char *input) {
+    char *line = strdup(input);
+    char *segment;
+    int n = 0;
+    t_command *commands[128];
+    
+    // Split pipeline segments
+    segment = strtok(line, "|");
+    while (segment) {
+        commands[n++] = parse_single_command(segment);
+        segment = strtok(NULL, "|");
+    }
+    
+    int i, pipefd[2], in_fd = 0;
     pid_t pid;
-    int prev_pipe = -1; // This variable stores the previous pipe's read end
 
-    while (args[i]) {
-        // When we encounter the pipe
-        if (strcmp(args[i], "|") == 0) {
-            // Create a pipe
-            if (pipe(pipe_fd) == -1) {
-                perror("Pipe failed");
-                exit(1);
+    for (i = 0; i < n; i++) {
+        if (i < n - 1) pipe(pipefd);
+        
+        pid = fork();
+        if (pid == 0) {
+            if (i > 0) {
+                dup2(in_fd, STDIN_FILENO);
+                close(in_fd);
             }
-
-            pid = fork();
-            if (pid == 0) {
-                // Child process
-                if (prev_pipe != -1) {
-                    // Redirect the previous pipe's read end to stdin
-                    dup2(prev_pipe, STDIN_FILENO);
-                    close(prev_pipe);
-                }
-                close(pipe_fd[0]); // Close read end of current pipe
-                dup2(pipe_fd[1], STDOUT_FILENO); // Redirect stdout to pipe
-                args[i] = NULL; // Terminate the current command at the pipe
-                ft_run(args); // Execute the command
-            } else if (pid > 0) {
-                // Parent process
-                close(pipe_fd[1]); // Close write end of current pipe
-                if (prev_pipe != -1) {
-                    close(prev_pipe); // Close previous pipe's read end
-                }
-                prev_pipe = pipe_fd[0]; // Update the previous pipe's read end
-                i++; // Move to the next command after the pipe
-            } else {
-                perror("Fork failed");
-                exit(1);
+            if (i < n - 1) {
+                close(pipefd[0]);
+                dup2(pipefd[1], STDOUT_FILENO);
+                close(pipefd[1]);
             }
+            exec_command(commands[i]);
         } else {
-            i++; // Keep moving until we find the pipe or end of commands
+            if (i > 0) close(in_fd);
+            if (i < n - 1) {
+                close(pipefd[1]);
+                in_fd = pipefd[0];
+            }
+            waitpid(pid, NULL, 0);
         }
     }
-
-    // If no pipe was encountered, execute the last command (if any)
-    if (prev_pipe != -1) {
-        close(prev_pipe);
+    free(line);
+    for (int j = 0; j < n; j++) {
+        free(commands[j]);
     }
-
-    // Wait for all child processes to finish
-    while (wait(NULL) > 0);
-}
-
-
-void handle_redirections_and_pipes(char **args)
-{
-    int i = 0;
-
-    // Check for any pipes in the command
-    handle_pipes(args);
-
-    // After handling pipes, apply any redirections and run the command
-    // handle_redirections(args);
-
-    // If no pipe was present, execute the command normally
-    ft_run(args);
 }
 
 void    lis(int i)
@@ -177,12 +221,11 @@ void    lis(int i)
     rl_replace_line("", 0);
     rl_redisplay();
 }
-
 int	main(void)
 {
-	char	*input;
-	char	**search;
-
+    char	*input;
+	// char	**search;
+    
 	signal(SIGINT, lis);
 	while (1)
 	{
@@ -199,9 +242,10 @@ int	main(void)
 		}
 		if (*input)
 			add_history(input);
-		search = ft_split(input, ' ');
-		handle_redirections_and_pipes(search);
-		ft_run(search);
+		// search = ft_split(input, ' ');
+        execute_pipeline(input);
+		// handle_redirections_and_pipes(search);
+		// ft_run(search);
 		free(input);
 	}
 	rl_clear_history();

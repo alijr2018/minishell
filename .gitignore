@@ -1,2 +1,3 @@
 allow
 minishell
+test.c

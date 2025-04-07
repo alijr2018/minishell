@@ -1,0 +1,1 @@
+cc test.c ft_split.c ft_putstr.c ft_printf.c -o mini -lreadline  && ./mini
