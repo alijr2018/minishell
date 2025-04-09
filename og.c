@@ -1,32 +1,31 @@
-/* ************************************************************************** */
-/*	                                                                          */
-/*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/25 10:51:41 by abrami            #+#    #+#             */
-/*   Updated: 2025/03/25 11:15:40 by abrami           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <signal.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
-/**
-**how my code work is get input with readline then pass directly to execve and then search for
-** the command if it is run other wise command not found , to implimented |(pipe) and the other
-**  i need to parse mean i have to search for the implimentation if i found it i have to run the
-** command given diff way .
-*/
+// #define MAX_ARGS 1024
+
+// typedef struct s_command {
+//     char **args;
+//     char *input_file;
+//     char *output_file;
+//     char *heredoc_delimiter;
+//     int append_output;
+// } t_command;
 
 int ft_strcmp(char *srt, char *str)
 {
-	int	i;
-
-	i = 0;
-	while (str[i] && srt[i] && str[i] == srt[i])
-		i++;
-	return (str[i] - srt[i]);
+    int i = 0;
+    while (str[i] && srt[i] && str[i] == srt[i])
+        i++;
+    return (str[i] - srt[i]);
 }
 
 t_command *parse_single_command(char *segment) {
@@ -59,59 +58,6 @@ t_command *parse_single_command(char *segment) {
     cmd->args[j] = NULL;
     free(tokens);
     return cmd;
-}
-
-static void	ft_exit(char *input)
-{
-	ft_printf("exit\n");
-	free(input);
-}
-
-int has_unclosed_quotes(const char *str)
-{
-    int	single_quote;
-	int	double_quote;
-
-    single_quote = 0;
-	double_quote = 0;
-	while (*str)
-    {
-        if (*str == '\'' && double_quote == 0)
-            single_quote = !single_quote;
-        else if (*str == '"' && single_quote == 0)
-		double_quote = !double_quote;
-	str++;
-    }
-    return (single_quote || double_quote);
-	// Return 1 if there's an unclosed quote
-}
-
-char *read_full_command(void)
-{
-    char	*input;
-    char	*temp;
-    char	*line;
-
-    input = NULL;
-	input = readline("minishell!> ");
-    if (!input)
-		return (NULL);
-	while (has_unclosed_quotes(input))
-    {
-        temp = readline("> ");
-        if (!temp)
-            break;
-        line = malloc(ft_strlen(input) + ft_strlen(temp) + 2);
-        if (!line)
-            return (input);
-		strcpy(line, input);
-		strcat(line, "/");
-		strcat(line, temp);
-        free(input);
-        input = line;
-        free(temp);
-    }
-    return (input);
 }
 
 void handle_input(t_command *cmd) {
@@ -156,16 +102,13 @@ void handle_output(t_command *cmd) {
     }
 }
 
-void exec_command(t_command *cmd)
-{
-
+void exec_command(t_command *cmd) {
     handle_input(cmd);
     handle_output(cmd);
-    exec(cmd->args); //the problem is in echo
-    // if (execvp(cmd->args[0], cmd->args) == -1) {
-    //     perror("execvp");
-    //     exit(127);
-    // }
+    if (execvp(cmd->args[0], cmd->args) == -1) {
+        perror("execvp");
+        exit(127);
+    }
 }
 
 void execute_pipeline(char *input) {
@@ -222,28 +165,26 @@ void    lis(int i)
     rl_replace_line("", 0);
     rl_redisplay();
 }
-int	main(void)
-{
-    char	*input;
-	// char	**search;
-    
+
+int main(void) {
+    char *input;
+
 	signal(SIGINT, lis);
-	while (1)
-	{
-		input = read_full_command();
-		if (!input || ft_strcmp(input, "exit") == 0)
+
+    while (1) {
+        input = readline("minishell> ");
+        if (!input)
 		{
-			ft_exit(input);
 			exit(0);
 		}
-		if (*input)
-			add_history(input);
-		// search = ft_split(input, ' ');
+		if (ft_strcmp(input, "exit") == 0)
+		{
+			break ;
+		}
+        if (*input) add_history(input);
+
         execute_pipeline(input);
-		// handle_redirections_and_pipes(search);
-		// ft_run(search);
-		free(input);
-	}
-	rl_clear_history();
-	return (0);
+        free(input);
+    }
+    return 0;
 }
