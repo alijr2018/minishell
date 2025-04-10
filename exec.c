@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/03/31 02:06:45 by abrami           ###   ########.fr       */
+/*   Updated: 2025/04/10 09:34:16 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,9 @@ int handle_options(char **args, int *i, int *no_newline, int *interpret_backslas
 	}
 	return (*i);
 }
-
+// carte nationale
+// cv + photo
+// photo diplome bac
 char *remove_quotes(char *arg)
 {
 	int	len;
