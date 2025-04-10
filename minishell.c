@@ -161,11 +161,11 @@ void exec_command(t_command *cmd)
 
     handle_input(cmd);
     handle_output(cmd);
-    // exec(cmd->args); //the problem is in echo
-    if (execvp(cmd->args[0], cmd->args) == -1) {
-        perror("execvp");
-        exit(127);
-    }
+    exec(cmd->args); //the problem is in echo
+    // if (execvp(cmd->args[0], cmd->args) == -1) {
+    //     perror("execvp");
+    //     exit(127);
+    // }
 }
 
 void execute_pipeline(char *input) {

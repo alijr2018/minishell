@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/04/10 09:34:16 by abrami           ###   ########.fr       */
+/*   Updated: 2025/04/10 10:01:14 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,29 +45,52 @@ static char	*ft_check(char *str)
 
 static char	*searchexec(char *str)
 {
-	char	*path;
-	char	*full_path;
-	char	*dir;
-	char	**paths;
-	int		i;
+    char *path;
+    char *full_path, *dir, **paths;
+    int i;
 
-	path = getenv("PATH");
-	if (!str || !*str)
-		return (NULL);
-	if (ft_strchr(str, '/'))
-		ft_check(str);
-	paths = ft_split(path, ':');
-	if (!paths)
-		return (NULL);
-	dir = ft_strtok(path, ":");
-	i = 0;
-	while (dir)
-	{
-		paths[i++] = dir;
-		dir = ft_strtok(NULL, ":");
-	}
-	paths[i] = NULL;
-	ft_return(full_path, dir, paths, str);
+
+
+    path = getenv("PATH");
+    // ft_printf("\n%s\n", path);
+    if(!str || !*str)
+        return (NULL);
+    if (ft_strchr(str, '/'))
+    {
+        if (access(str, X_OK) == 0)
+            return (ft_strdup(str));
+        return (NULL);
+    }
+    paths = ft_split(path, ':');
+    if (!paths)
+        return (NULL);
+    dir = ft_strtok(path, ":");
+    i = 0;
+    while (dir)
+    {
+        paths[i++] = dir;
+        dir = ft_strtok(NULL, ":");
+    }
+    paths[i] = NULL;
+    i = 0;
+    while(paths[i])
+    {
+        full_path = malloc(strlen(paths[i]) + strlen(str) + 2);
+        if (!full_path)
+        {
+            i++;
+            continue;
+        }
+        strcpy(full_path, paths[i]);
+        strcat(full_path, "/");
+        strcat(full_path, str);
+        if (access(full_path, X_OK) == 0)
+            return (ft_strdup(full_path));
+        free(full_path);
+        i++;
+    }
+    return (NULL);
+
 }
 
 void	command_cd(char **alt)
@@ -102,9 +125,7 @@ int handle_options(char **args, int *i, int *no_newline, int *interpret_backslas
 	}
 	return (*i);
 }
-// carte nationale
-// cv + photo
-// photo diplome bac
+
 char *remove_quotes(char *arg)
 {
 	int	len;
