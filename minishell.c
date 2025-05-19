@@ -214,7 +214,7 @@ void execute_pipeline(char *input) {
     }
 }
 
-void    lis(int i)
+void    lis(int i)//for Ctrl-c
 {
     (void)i;
     ft_printf("\n");  

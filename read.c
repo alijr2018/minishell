@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:06:52 by abrami            #+#    #+#             */
-/*   Updated: 2025/04/07 15:50:10 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/19 16:40:43 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void	ft_exit(char *input)
 // 		exit(1);
 // 	}
 // }
+
 void handle_input(t_command *cmd)
 {
 	int		pipefd[2];

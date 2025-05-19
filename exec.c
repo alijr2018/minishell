@@ -6,50 +6,48 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/04/10 10:01:14 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/19 15:21:57 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*ft_return(char *full_path, char *dir, char **paths, char *str)
-{
-	int	i;
+// static char	*ft_return(char *full_path, char **paths, char *str)
+// {
+// 	int	i;
 
-	i = 0;
-	while (paths[i])
-	{
-		full_path = malloc(ft_strlen(paths[i]) + ft_strlen(str) + 2);
-		if (!full_path)
-		{
-			i++;
-			continue ;
-		}
-		strcpy(full_path, paths[i]);
-		strcat(full_path, "/");
-		strcat(full_path, str);
-		if (access(full_path, X_OK) == 0)
-			return (ft_strdup(full_path));
-		free(full_path);
-		i++;
-	}
-	return (NULL);
-}
+// 	i = 0;
+// 	while (paths[i])
+// 	{
+// 		full_path = malloc(ft_strlen(paths[i]) + ft_strlen(str) + 2);
+// 		if (!full_path)
+// 		{
+// 			i++;
+// 			continue ;
+// 		}
+// 		strcpy(full_path, paths[i]);
+// 		strcat(full_path, "/");
+// 		strcat(full_path, str);
+// 		if (access(full_path, X_OK) == 0)
+// 			return (ft_strdup(full_path));
+// 		free(full_path);
+// 		i++;
+// 	}
+// 	return (NULL);
+// }
 
-static char	*ft_check(char *str)
-{
-	if (access(str, X_OK) == 0)
-		return (ft_strdup(str));
-	return (NULL);
-}
+// static char	*ft_check(char *str)
+// {
+// 	if (access(str, X_OK) == 0)
+// 		return (ft_strdup(str));
+// 	return (NULL);
+// }
 
 static char	*searchexec(char *str)
 {
     char *path;
     char *full_path, *dir, **paths;
     int i;
-
-
 
     path = getenv("PATH");
     // ft_printf("\n%s\n", path);
@@ -90,7 +88,6 @@ static char	*searchexec(char *str)
         i++;
     }
     return (NULL);
-
 }
 
 void	command_cd(char **alt)
