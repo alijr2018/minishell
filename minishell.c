@@ -97,27 +97,29 @@ char *read_full_command(void)
 {
     char	*input;
     char	*temp;
-    char	*line;
+    // char	*line;
 
     input = NULL;
 	input = readline("minishell!> ");
     if (!input)
 		return (NULL);
-	while (has_unclosed_quotes(input))
-    {
-        temp = readline("> ");
-        if (!temp)
-            break;
-        line = malloc(ft_strlen(input) + ft_strlen(temp) + 2);
-        if (!line)
-            return (input);
-		strcpy(line, input);
-		strcat(line, "/");
-		strcat(line, temp);
-        free(input);
-        input = line;
-        free(temp);
-    }
+    if ( has_unclosed_quotes(input))
+        printf("Error\n");
+	// while (has_unclosed_quotes(input))
+    // {
+    //     temp = readline("> ");
+    //     if (!temp)
+    //         break;
+    //     line = malloc(ft_strlen(input) + ft_strlen(temp) + 2);
+    //     if (!line)
+    //         return (input);
+	// 	strcpy(line, input);
+	// 	strcat(line, "/");
+	// 	strcat(line, temp);
+    //     free(input);
+    //     input = line;
+    //     free(temp);
+    // }
     return (input);
 }
 

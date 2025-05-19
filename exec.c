@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/19 13:36:04 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/19 13:42:28 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ void print_arguments(char **args, int i, int interpret_backslashes)
         arg = args[i];
         arg = remove_quotes(arg);
 		processed_arg = process_escape_sequences(arg, &interpret_backslashes);
-        ft_printf("%s", processed_arg);
+        // ft_printf("%s", processed_arg);
         if (args[i + 1])
             ft_printf(" ");
         i++;
@@ -218,8 +218,8 @@ void ft_echo(char **args)
     interpret_backslashes = 0;
     i = handle_options(args, &i, &no_newline, &interpret_backslashes);
     print_arguments(args, i, interpret_backslashes);
-    if (!no_newline)
-        ft_printf("\n");
+    // if (!no_newline)
+    //     ft_printf("\n");
 }
 void	exec(char **alt)
 {
