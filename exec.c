@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/19 15:21:57 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/19 17:37:49 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ char *remove_quotes(char *arg)
 		arg++;
 	return (arg);
 }
-
+//add here ' && " for this echo '"'helo'"'
 char *process_escape_sequences(char *arg, int *interpret_backslashes)
 {
 	char	*new_arg;

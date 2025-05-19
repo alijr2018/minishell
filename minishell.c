@@ -19,6 +19,13 @@
 ** command given diff way .
 */
 
+
+/**
+ *handle ls |||||| ls => syntax error near unexpected token `||' 
+ *echo ""hello""
+ * ls >>>>>>>>> ls
+ * **/
+
 int ft_strcmp(char *srt, char *str)
 {
 	int	i;
