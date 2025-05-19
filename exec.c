@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/19 17:37:49 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/19 13:36:04 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,19 +125,34 @@ int handle_options(char **args, int *i, int *no_newline, int *interpret_backslas
 
 char *remove_quotes(char *arg)
 {
-	int	len;
-	
-	len = ft_strlen(arg);
-	if ((arg[0] == '"' && arg[len - 1] == '"') || (arg[0] == '\'' && arg[len - 1] == '\''))
+	char	*result;
+	int		i, j;
+	char	q;
+
+	if (!arg)
+		return (NULL);
+	result = malloc(ft_strlen(arg) + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (arg[i])
 	{
-		arg[len - 1] = '\0';
-		arg++;
+		if (arg[i] == '\'' || arg[i] == '"')
+		{
+			q = arg[i++];
+			while (arg[i] && arg[i] != q)
+				result[j++] = arg[i++];
+			if (arg[i] == q)
+				i++; // skip closing quote
+			else
+				return (free(result), NULL);
+		}
+		else
+			result[j++] = arg[i++];
 	}
-	if (*arg == '\0')
-		return (arg);
-	while (*arg && isspace((unsigned char)*arg)) 
-		arg++;
-	return (arg);
+	result[j] = '\0';
+	return (result);
 }
 //add here ' && " for this echo '"'helo'"'
 char *process_escape_sequences(char *arg, int *interpret_backslashes)
