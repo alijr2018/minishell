@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/20 12:27:01 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/20 13:25:10 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,10 +112,10 @@ int handle_options(char **args, int *i, int *no_newline, int *interpret_backslas
 	{
 		if (ft_strcmp(args[*i], "-n") == 0)
 			*no_newline = 1;
-		else if (ft_strcmp(args[*i], "-e") == 0)
-			*interpret_backslashes = 1;
-		else if (ft_strcmp(args[*i], "-E") == 0)
-			*interpret_backslashes = 0;
+		// else if (ft_strcmp(args[*i], "-e") == 0)
+		// 	*interpret_backslashes = 1;
+		// else if (ft_strcmp(args[*i], "-E") == 0)
+		// 	*interpret_backslashes = 0;
 		else
 			break;
 		(*i)++;

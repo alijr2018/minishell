@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/20 12:29:22 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/20 13:24:40 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*searchexec(char *str)
 
     path = getenv("PATH");
     if(!str || !*str)
-        return (NULL);
+    return (NULL);
     if (ft_strchr(str, '/'))
     {
         // search failure for access 
