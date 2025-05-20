@@ -44,7 +44,7 @@ char		*ft_strtok(char *str, const char *delim);
 int			ft_strcmp(char *srt, char *str);
 void		ft_echo(char **args);
 void		command_cd(char **alt);
-
+int         ft_strcmp(char *src, char *dest);
 
 
 #endif

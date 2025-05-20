@@ -27,6 +27,7 @@
  *handle ls |||||| ls => syntax error near unexpected token `||' 
  *echo ""hello""
  * ls >>>>>>>>> ls
+ * redo echo isn't working at all
  * **/
 
 int ft_strcmp(char *srt, char *str)
@@ -35,6 +36,16 @@ int ft_strcmp(char *srt, char *str)
 
 	i = 0;
 	while (str[i] && srt[i] && str[i] == srt[i])
+		i++;
+	return (str[i] - srt[i]);
+}
+
+int ft_strncmp(char *srt, char *str, int n)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && srt[i] && str[i] == srt[i] && i <= n)
 		i++;
 	return (str[i] - srt[i]);
 }
@@ -240,6 +251,22 @@ static char *read_full_command(char *input)
     // }
     return (input);
 }
+static void ft_built_in(char *input)
+{
+    if (ft_strcmp(input, "cd") == 0)
+		return (command_cd(&input));
+	if (ft_strncmp(input, "echo", 4) == 0)
+		return (ft_echo(&input));
+	// if (ft_strcmp(*input, "hello") == 0)
+	// 	return (ft_test(input));
+	// if (ft_strcmp(*input, "pwd") == 0)
+	// 	return (ft_pwd(input));
+	if (ft_strcmp(input, "$?") == 0)//$? last exit status
+	{
+		ft_printf("0: command not found\n");
+		return ;
+	}
+}
 int	main(void)
 {
     char	*input;
@@ -258,13 +285,14 @@ int	main(void)
             exit(0);
 		}
 		if (*input)
-        add_history(input);
+            add_history(input);
         if (has_unclosed_quotes(input))
             printf("Error\n");
         // passing = read_full_command(input);
-		search = ft_split(input, ' ');
-        // execute_pipeline(passing);
-        exec(search);
+		// search = ft_split(input, ' ');
+        ft_built_in(input);
+        // execute_pipeline(input);
+        // exec(search);
         // exec_command(commands[i]);
 		// handle_redirections_and_pipes(search);
 		// ft_run(search);
