@@ -45,7 +45,8 @@ int	main(void)
 			ft_exit(input);
 		if (*input)
 			add_history(input);
-		printf("this is ---> %s :\n", input);
+		// printf("this is ---> %s :\n", input);
+		ft_executing(&input);
 	}
 	rl_clear_history();
 	return (0);

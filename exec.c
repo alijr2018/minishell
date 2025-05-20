@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/20 16:12:35 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/20 12:27:01 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,17 +106,16 @@ void	command_cd(char **alt)
 		perror("cd");
 }
 
-// int handle_options(char **args, int *i, int *no_newline, int *interpret_backslashes)
-int handle_options(char **args, int *i, int *no_newline)
+int handle_options(char **args, int *i, int *no_newline, int *interpret_backslashes)
 {
-	while ((*args)[*i] && (*args)[*i] == '-')
+	while (args[*i] && args[*i][0] == '-' && args[*i][1] != '\0')
 	{
 		if (ft_strcmp(args[*i], "-n") == 0)
 			*no_newline = 1;
-		// else if (ft_strcmp(args[*i], "-e") == 0)
-		// 	*interpret_backslashes = 1;
-		// else if (ft_strcmp(args[*i], "-E") == 0)
-		// 	*interpret_backslashes = 0;
+		else if (ft_strcmp(args[*i], "-e") == 0)
+			*interpret_backslashes = 1;
+		else if (ft_strcmp(args[*i], "-E") == 0)
+			*interpret_backslashes = 0;
 		else
 			break;
 		(*i)++;
@@ -130,15 +129,14 @@ char *remove_quotes(char *arg)
 	int		i, j;
 	char	q;
 
-	// if (!arg)
-	// 	return (NULL);
-	//add fucntion to calculte how many "" or ' are in the arg
+	if (!arg)
+		return (NULL);
 	result = malloc(ft_strlen(arg) + 1);
 	if (!result)
 		return (NULL);
 	i = 0;
 	j = 0;
-	while (arg[i] != '\0')
+	while (arg[i])
 	{
 		if (arg[i] == '\'' || arg[i] == '"')
 		{
@@ -146,7 +144,9 @@ char *remove_quotes(char *arg)
 			while (arg[i] && arg[i] != q)
 				result[j++] = arg[i++];
 			if (arg[i] == q)
-				i++;
+				i++; // skip closing quote
+			else
+				return (free(result), NULL);
 		}
 		else
 			result[j++] = arg[i++];
@@ -154,7 +154,7 @@ char *remove_quotes(char *arg)
 	result[j] = '\0';
 	return (result);
 }
-
+//add here ' && " for this echo '"'helo'"'
 char *process_escape_sequences(char *arg, int *interpret_backslashes)
 {
 	char	*new_arg;
@@ -190,23 +190,18 @@ char *process_escape_sequences(char *arg, int *interpret_backslashes)
     return (arg);
 }
 
-// void print_arguments(char **args, int i, int interpret_backslashes)
-void print_arguments(char **args, int i)
+void print_arguments(char **args, int i, int interpret_backslashes)
 {
 	char	*arg;
-	char	*tmp;
 	char	*processed_arg;
 
-    while (*args[i])
+    while (args[i])
     {
         arg = args[i];
-        tmp = remove_quotes(arg);
-		// printf("%s\n", arg);
-		// processed_arg = process_escape_sequences(tmp, &interpret_backslashes);
+        arg = remove_quotes(arg);
+		processed_arg = process_escape_sequences(arg, &interpret_backslashes);
         // ft_printf("%s", processed_arg);
-        ft_printf("%s", tmp);
-        // ft_printf("%c", *args[i]);
-        if (*args[i + 1])
+        if (args[i + 1])
             ft_printf(" ");
         i++;
     }
@@ -215,61 +210,37 @@ void print_arguments(char **args, int i)
 void ft_echo(char **args)
 {
     int	i;
-	int j = ft_strlen(*args);
     int	no_newline;
     int	interpret_backslashes;
 
 	i = 1;
 	no_newline = 0;
     interpret_backslashes = 0;
-	if (args[j++] != NULL)
-		return ;
-	else
-	{
-		// i = handle_options(args, &i, &no_newline, &interpret_backslashes);
-		i = handle_options(args, &i, &no_newline);
-		// print_arguments(args, i, interpret_backslashes);
-		print_arguments(args, i);
-		if (!no_newline)
-			ft_printf("\n");
-	}
+    i = handle_options(args, &i, &no_newline, &interpret_backslashes);
+    print_arguments(args, i, interpret_backslashes);
+    // if (!no_newline)
+    //     ft_printf("\n");
 }
-// void ft_test(char **alt)
-// {
-// 	printf("test");
-// }
-//add here bash: syntax error near unexpected token `|'
-
-//the function exec should be just for external function execution
 void	exec(char **alt)
 {
 	char	*exec_path;
 
-	// if (ft_strcmp(*alt, "cd") == 0)
-	// 	return (command_cd(alt));
-	// if (ft_strcmp(*alt, "echo") == 0)
-	// 	return (ft_echo(alt));
-	// // if (ft_strcmp(*alt, "hello") == 0)
-	// // 	return (ft_test(alt));
-	// // if (ft_strcmp(*alt, "pwd") == 0)
-	// // 	return (ft_pwd(alt));
-	// if (ft_strcmp(*alt, "$?") == 0)
-	// {
-	// 	ft_printf("0: command not found\n");
-	// 	return ;
-	// }
-	// else
-	// {
-		exec_path = searchexec(*alt);
-		// printf("%s", exec_path);
-		if (!exec_path)
-		{
-			ft_printf("Command not found: %s\n", *alt);
-			exit(127);
-		}
-		if (execve(exec_path, alt, NULL) == -1)
-			perror("Error executing file");
-		exit(1);		
-	// }
-	// break;
+	if (ft_strcmp(*alt, "cd") == 0)
+		return (command_cd(alt));
+	if (ft_strcmp(*alt, "echo") == 0)
+		return (ft_echo(alt));
+	if (ft_strcmp(*alt, "$?") == 0)
+	{
+		ft_printf("0: command not found\n");
+		return ;
+	}
+	exec_path = searchexec(*alt);
+	if (!exec_path)
+	{
+		ft_printf("Command not found: %s\n", *alt);
+		exit(127);
+	}
+	if (execve(exec_path, alt, NULL) == -1)
+		perror("Error executing file");
+	exit(1);
 }

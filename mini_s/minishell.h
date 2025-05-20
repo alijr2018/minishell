@@ -32,19 +32,12 @@ typedef struct s_command {
 	int		append_output;
 }	t_command;
 
-int			ft_printf(const char *in, ...);
-int			ft_putstr(char *s);
-int			ft_putchar(char c);
-char		**ft_split(const char *s, char c);
-void		exec(char **alt);
-char		*ft_strchr(const char *s, int c);
-char		*ft_strdup(const char *s1);
-size_t		ft_strlen(const char *s);
-char		*ft_strtok(char *str, const char *delim);
-int			ft_strcmp(char *srt, char *str);
-void		ft_echo(char **args);
-void		command_cd(char **alt);
-int         ft_strcmp(char *src, char *dest);
-
+int		ft_strcmp(char *src, char *dest);
+void	ft_executing(char **alt);
+char	*ft_strchr(const char *s, int c);
+char	**ft_split(const char *s, char c);
+size_t 	ft_strlen(const char *str);
+char	*ft_strdup(const char *s1);
+char	*ft_strtok(char *str, const char *delim);
 
 #endif
