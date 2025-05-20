@@ -19,7 +19,10 @@
 ** command given diff way .
 */
 
-
+/***
+ * create a file specific for parsing
+ * and other one for execution
+ */
 /**
  *handle ls |||||| ls => syntax error near unexpected token `||' 
  *echo ""hello""
@@ -71,7 +74,8 @@ t_command *parse_single_command(char *segment) {
 static void	ft_exit(char *input)
 {
 	ft_printf("exit\n");
-	free(input);
+    if (input)
+	    free(input);
 }
 
 int has_unclosed_quotes(const char *str)
@@ -93,37 +97,8 @@ int has_unclosed_quotes(const char *str)
 	// Return 1 if there's an unclosed quote
 }
 
-char *read_full_command(void)
+void handle_input(t_command *cmd)
 {
-    char	*input;
-    char	*temp;
-    // char	*line;
-
-    input = NULL;
-	input = readline("minishell!> ");
-    if (!input)
-		return (NULL);
-    if ( has_unclosed_quotes(input))
-        printf("Error\n");
-	// while (has_unclosed_quotes(input))
-    // {
-    //     temp = readline("> ");
-    //     if (!temp)
-    //         break;
-    //     line = malloc(ft_strlen(input) + ft_strlen(temp) + 2);
-    //     if (!line)
-    //         return (input);
-	// 	strcpy(line, input);
-	// 	strcat(line, "/");
-	// 	strcat(line, temp);
-    //     free(input);
-    //     input = line;
-    //     free(temp);
-    // }
-    return (input);
-}
-
-void handle_input(t_command *cmd) {
     if (cmd->heredoc_delimiter) {
         int pipefd[2];
         pipe(pipefd);
@@ -167,7 +142,6 @@ void handle_output(t_command *cmd) {
 
 void exec_command(t_command *cmd)
 {
-
     handle_input(cmd);
     handle_output(cmd);
     exec(cmd->args); //the problem is in echo
@@ -177,7 +151,8 @@ void exec_command(t_command *cmd)
     // }
 }
 
-void execute_pipeline(char *input) {
+void execute_pipeline(char *input)
+{
     char *line = strdup(input);
     char *segment;
     int n = 0;
@@ -214,9 +189,10 @@ void execute_pipeline(char *input) {
                 close(pipefd[1]);
                 in_fd = pipefd[0];
             }
-            waitpid(pid, NULL, 0);
+            // waitpid(pid, NULL, 0);
         }
     }
+    while(wait(NULL) != -1){};//this solve 
     free(line);
     for (int j = 0; j < n; j++) {
         free(commands[j]);
@@ -231,27 +207,69 @@ void    lis(int i)//for Ctrl-c
     rl_replace_line("", 0);
     rl_redisplay();
 }
+static char *read_full_command(char *input)
+{
+    // char	*input;
+    char	*temp;
+    char	*line;
+    int     o = 0;
+
+    // input = NULL;
+    // if (!input)
+	// 	return (NULL);
+    if (has_unclosed_quotes(input))
+        printf("Error\n");
+    // if (ft_strcmp(input, "|"))
+    //     execute_pipeline(input);
+    // else
+    //     exec_command(&input);
+	// while (has_unclosed_quotes(input))
+    // {
+    //     temp = readline("> ");
+    //     if (!temp)
+    //         break;
+    //     line = malloc(ft_strlen(input) + ft_strlen(temp) + 2);
+    //     if (!line)
+    //         return (input);
+	// 	strcpy(line, input);
+	// 	strcat(line, "/");
+	// 	strcat(line, temp);
+    //     free(input);
+    //     input = line;
+    //     free(temp);
+    // }
+    return (input);
+}
 int	main(void)
 {
     char	*input;
-	// char	**search;
+    char	*passing;
+	char	**search;
     
 	signal(SIGINT, lis);
 	while (1)
 	{
-		input = read_full_command();
+        input = readline("minishell!> ");
 		if (!input || ft_strcmp(input, "exit") == 0)
 		{
-			ft_exit(input);
-			exit(0);
+            // ft_exit(input);
+			// break;
+            printf("exit\n");
+            exit(0);
 		}
 		if (*input)
-			add_history(input);
-		// search = ft_split(input, ' ');
-        execute_pipeline(input);
+        add_history(input);
+        if (has_unclosed_quotes(input))
+            printf("Error\n");
+        // passing = read_full_command(input);
+		search = ft_split(input, ' ');
+        // execute_pipeline(passing);
+        exec(search);
+        // exec_command(commands[i]);
 		// handle_redirections_and_pipes(search);
 		// ft_run(search);
-		free(input);
+		// free(input);
+		// free(passing);
 	}
 	rl_clear_history();
 	return (0);
