@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern  int g_var;
+
 //check with leaks
 static void	ft_exit(char *input)
 {
@@ -23,24 +25,25 @@ static void	ft_exit(char *input)
 	exit (0);
 }
 
-//this function for listing to Ctrl-C
-void	lis(int i)
-{
-	(void)i;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
+// void	lis(int i)
+// {
+// 	(void)i;
+// 	printf("\n");
+// 	rl_on_new_line();
+// 	rl_replace_line("", 0);
+// 	rl_redisplay();
+// }
 
 int	main(void)
 {
 	char	*input;
 
-	signal(SIGINT, lis);
+	ft_sigaction();
 	while (1)
 	{
+		g_var = 1;
 		input = readline("minishell!>> ");
+		g_var = -1;
 		if (!input || ft_strcmp(input, "exit") == 0)
 			ft_exit(input);
 		if (*input)

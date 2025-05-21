@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+int g_var;
 /**
 **how my code work is get input with readline then pass directly to execve and then search for
 ** the command if it is run other wise command not found , to implimented |(pipe) and the other
@@ -210,26 +211,18 @@ void execute_pipeline(char *input)
     }
 }
 
-void    lis(int i)//for Ctrl-c
-{
-    (void)i;
-    ft_printf("\n");  
-    rl_on_new_line();
-    rl_replace_line("", 0);
-    rl_redisplay();
-}
 static char *read_full_command(char *input)
 {
     // char	*input;
     char	*temp;
     char	*line;
     int     o = 0;
-
+    
     // input = NULL;
     // if (!input)
 	// 	return (NULL);
     if (has_unclosed_quotes(input))
-        printf("Error\n");
+    printf("Error\n");
     // if (ft_strcmp(input, "|"))
     //     execute_pipeline(input);
     // else
@@ -254,29 +247,80 @@ static char *read_full_command(char *input)
 static void ft_built_in(char *input)
 {
     if (ft_strcmp(input, "cd") == 0)
-		return (command_cd(&input));
+    return (command_cd(&input));
 	if (ft_strncmp(input, "echo", 4) == 0)
-		return (ft_echo(&input));
+    return (ft_echo(&input));
 	// if (ft_strcmp(*input, "hello") == 0)
 	// 	return (ft_test(input));
 	// if (ft_strcmp(*input, "pwd") == 0)
 	// 	return (ft_pwd(input));
 	if (ft_strcmp(input, "$?") == 0)//$? last exit status
 	{
-		ft_printf("0: command not found\n");
+        ft_printf("0: command not found\n");
 		return ;
 	}
 }
+// void    lis(int i)//for Ctrl-c
+// {
+//     (void)i;
+//     ft_printf("\n");  
+//     rl_on_new_line();
+//     rl_replace_line("", 0);
+//     rl_redisplay();
+// }
+
+void	lis(int i)
+{
+    if (i == SIGQUIT)
+    {
+        return ;
+        // if i have to add costum thig to Ctrl-\ i have either use g_var for pid or finde other way
+        //or to detect the command
+    }
+    if (g_var == 1)
+	{
+        printf("\n");
+        rl_on_new_line();
+        rl_replace_line("", 0);
+        rl_redisplay();
+    }
+}
+
+void ft_sigaction()
+{
+    struct sigaction	sa;
+    struct sigaction    ignore;
+    
+    //  SIGINT (Ctrl-C)
+    sa.sa_flags = SA_RESTART;
+	sa.sa_sigaction = lis;
+	sigemptyset (&sa.sa_mask);
+    if (sigaction(SIGINT, &sa, NULL) == -1)
+    {
+        perror("sigaction");
+    }
+    // Ignore SIGQUIT (Ctrl-\)
+    ignore.sa_handler = SIG_IGN;
+    sigemptyset(&ignore.sa_mask);
+    ignore.sa_flags = 0;
+    if (sigaction(SIGQUIT, &ignore, NULL) == -1)
+    {
+        perror("sigaction SIGQUIT");
+    }
+}
+
 int	main(void)
 {
     char	*input;
     char	*passing;
 	char	**search;
-    
-	signal(SIGINT, lis);
+
+    ft_sigaction();
 	while (1)
 	{
+        g_var = 1;
         input = readline("minishell!> ");
+        g_var = -1;
 		if (!input || ft_strcmp(input, "exit") == 0)
 		{
             // ft_exit(input);
@@ -285,18 +329,18 @@ int	main(void)
             exit(0);
 		}
 		if (*input)
-            add_history(input);
+        add_history(input);
         if (has_unclosed_quotes(input))
-            printf("Error\n");
+        printf("Error\n");
         // passing = read_full_command(input);
 		// search = ft_split(input, ' ');
         ft_built_in(input);
-        // execute_pipeline(input);
+        execute_pipeline(input);
         // exec(search);
         // exec_command(commands[i]);
 		// handle_redirections_and_pipes(search);
 		// ft_run(search);
-		// free(input);
+		free(input);
 		// free(passing);
 	}
 	rl_clear_history();

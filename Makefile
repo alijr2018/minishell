@@ -6,7 +6,7 @@
 #    By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/25 10:51:21 by abrami            #+#    #+#              #
-#    Updated: 2025/05/20 15:49:17 by abrami           ###   ########.fr        #
+#    Updated: 2025/05/21 11:07:01 by abrami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ SRCS = minishell.c\
 		exec.c \
 
 CC = cc
-CFLAGS =  -g3 -fsanitize=address
+# CFLAGS =  -g3 -fsanitize=address
 RED = -lreadline 
 RM = rm -f
 

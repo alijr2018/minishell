@@ -39,5 +39,6 @@ char	**ft_split(const char *s, char c);
 size_t 	ft_strlen(const char *str);
 char	*ft_strdup(const char *s1);
 char	*ft_strtok(char *str, const char *delim);
+void	ft_sigaction();
 
 #endif
