@@ -6,10 +6,12 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 16:15:30 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/20 17:41:04 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/24 13:28:16 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+
+//i need to create a function to parse the input
 

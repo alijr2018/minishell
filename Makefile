@@ -6,7 +6,7 @@
 #    By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/25 10:51:21 by abrami            #+#    #+#              #
-#    Updated: 2025/05/21 11:07:01 by abrami           ###   ########.fr        #
+#    Updated: 2025/05/24 18:08:19 by abrami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ OBJS = $(SRCS:.c=.o)
 all: $(NAME) 
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $^ -o $@ $(RED)
+	$(CC) $(CFLAGS) $^ $(RED) -o $@ 
 
 %.o: %.c minishell.h
 	$(CC) $(CFLAGS) -c $< -o $@

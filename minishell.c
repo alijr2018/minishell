@@ -152,18 +152,18 @@ void handle_output(t_command *cmd) {
     }
 }
 
-void exec_command(t_command *cmd)
+void exec_command(t_command *cmd, char **env)
 {
     handle_input(cmd);
     handle_output(cmd);
-    exec(cmd->args); //the problem is in echo
+    exec(cmd->args, env); //the problem is in echo
     // if (execvp(cmd->args[0], cmd->args) == -1) {
     //     perror("execvp");
     //     exit(127);
     // }
 }
 
-void execute_pipeline(char *input)
+void execute_pipeline(char *input, char **env)
 {
     char *line = strdup(input);
     char *segment;
@@ -194,7 +194,7 @@ void execute_pipeline(char *input)
                 dup2(pipefd[1], STDOUT_FILENO);
                 close(pipefd[1]);
             }
-            exec_command(commands[i]);
+            exec_command(commands[i], env);
         } else {
             if (i > 0) close(in_fd);
             if (i < n - 1) {
@@ -309,13 +309,27 @@ void ft_sigaction()
     }
 }
 
-int	main(void)
+int	main(int ac,char **av,  char **env)
 {
+    (void)ac;
+    (void)av;
     char	*input;
     char	*passing;
 	char	**search;
+    int j = 0;
+
 
     ft_sigaction();
+    // if (env == NULL)
+    // {
+    //     while(env[j])
+    //     {
+    //         printf("env :%s\n", env[j]);
+    //         j++;
+    //     }
+    // }
+    // else
+    //     printf("dskjbd\n");
 	while (1)
 	{
         g_var = 1;
@@ -331,11 +345,14 @@ int	main(void)
 		if (*input)
         add_history(input);
         if (has_unclosed_quotes(input))
-        printf("Error\n");
+            printf("Error\n");
         // passing = read_full_command(input);
 		// search = ft_split(input, ' ');
+        // printf("\nget env:%s\n", getenv("PATH"));
+        // printf("\napath:%s\n", apath);
+
         ft_built_in(input);
-        execute_pipeline(input);
+        execute_pipeline(input, env);
         // exec(search);
         // exec_command(commands[i]);
 		// handle_redirections_and_pipes(search);

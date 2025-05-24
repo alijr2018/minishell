@@ -24,6 +24,8 @@
 # include <readline/history.h>
 #define MAX_ARGS 1024
 
+#define apath "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
 typedef struct s_command {
 	char	**args;
 	char	*input_file;
@@ -33,7 +35,8 @@ typedef struct s_command {
 }	t_command;
 
 int		ft_strcmp(char *src, char *dest);
-void	ft_executing(char **alt);
+// void	ft_executing(char **alt);
+void	ft_executing(char **alt, char **env);
 char	*ft_strchr(const char *s, int c);
 char	**ft_split(const char *s, char c);
 size_t 	ft_strlen(const char *str);

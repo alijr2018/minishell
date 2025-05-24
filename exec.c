@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/21 12:15:39 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/24 17:45:55 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,27 @@
 // 	return (NULL);
 // }
 
-static char	*searchexec(char *str)
+static char	*searchexec(char *str, char **envp)
 {
     char *path;
     char *full_path, *dir, **paths;
     int i;
+    int j = 0;
 
-    path = getenv("PATH");
-    // ft_printf("\n%s\n", path);
-    if(!str || !*str)
+    // path = getenv("PATH");
+    // path = env;
+	
+	   for (int i = 0; envp[i] != NULL; i++) {
+        if (strncmp(envp[i], "PATH=", 5) == 0) {
+            path = envp[i] + 5;  // Skip "PATH="
+            break;
+        }
+    }
+	
+	if (path == NULL)
+		path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
+		
+    if(!str || !*str) 
         return (NULL);
     if (ft_strchr(str, '/'))
     {
@@ -218,29 +230,44 @@ void ft_echo(char **args)
     interpret_backslashes = 0;
     i = handle_options(args, &i, &no_newline, &interpret_backslashes);
     print_arguments(args, i, interpret_backslashes);
-    // if (!no_newline)
-    //     ft_printf("\n");
+    if (!no_newline)
+        ft_printf("\n");
 }
-void	exec(char **alt)
+void command_env(char **env)
+{
+	int	i;
+
+	i = 0;
+	while(env[i])
+		printf("%s\n", env[i++]);
+}
+void	exec(char **alt,char **env)
 {
 	char	*exec_path;
 
+	if (ft_strcmp(*alt, "env") == 0)
+		return (command_env(env));
 	if (ft_strcmp(*alt, "cd") == 0)
 		return (command_cd(alt));
 	if (ft_strcmp(*alt, "echo") == 0)
 		return (ft_echo(alt));
-	if (ft_strcmp(*alt, "$?") == 0)
+	if (ft_strcmp(*alt, "$?") == 0)// fix it print the number of the last output
 	{
 		ft_printf("0: command not found\n");
 		return ;
 	}
-	exec_path = searchexec(*alt);
+	exec_path = searchexec(*alt, env);
+	// printf("%s\n", exec_path);
 	if (!exec_path)
 	{
 		ft_printf("Command not found: %s\n", *alt);
 		exit(127);
 	}
-	if (execve(exec_path, alt, NULL) == -1)
+	if (execve(exec_path, alt, env) == -1)
+	{
+		if (access(exec_path, X_OK) == 0)
+			return ;
 		perror("Error executing file");
+	}
 	exit(1);
 }

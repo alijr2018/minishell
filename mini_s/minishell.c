@@ -34,7 +34,7 @@ static void	ft_exit(char *input)
 // 	rl_redisplay();
 // }
 
-int	main(void)
+int	main(int ac, char **av, char **env)
 {
 	char	*input;
 
@@ -49,7 +49,7 @@ int	main(void)
 		if (*input)
 			add_history(input);
 		// printf("this is ---> %s :\n", input);
-		ft_executing(&input);
+		ft_executing(&input, env);
 	}
 	rl_clear_history();
 	return (0);
