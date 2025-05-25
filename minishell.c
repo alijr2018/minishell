@@ -29,18 +29,10 @@ int g_var;
  *echo ""hello""
  * ls >>>>>>>>> ls
  * redo echo isn't working at all
+ *to do Monday to really parsed you have to initialise the variables 
  * **/
 
-int ft_strcmp(char *srt, char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && srt[i] && str[i] == srt[i])
-		i++;
-	return (str[i] - srt[i]);
-}
-
+ 
 int ft_strncmp(char *srt, char *str, int n)
 {
 	int	i;
@@ -85,7 +77,7 @@ t_command *parse_single_command(char *segment) {
 
 static void	ft_exit(char *input)
 {
-	ft_printf("exit\n");
+	printf("exit\n");
     if (input)
 	    free(input);
 }
@@ -256,14 +248,14 @@ static void ft_built_in(char *input)
 	// 	return (ft_pwd(input));
 	if (ft_strcmp(input, "$?") == 0)//$? last exit status
 	{
-        ft_printf("0: command not found\n");
+        printf("0: command not found\n");
 		return ;
 	}
 }
 // void    lis(int i)//for Ctrl-c
 // {
 //     (void)i;
-//     ft_printf("\n");  
+//     printf("\n");  
 //     rl_on_new_line();
 //     rl_replace_line("", 0);
 //     rl_redisplay();
@@ -299,14 +291,14 @@ void ft_sigaction()
     {
         perror("sigaction");
     }
-    // Ignore SIGQUIT (Ctrl-\)
-    ignore.sa_handler = SIG_IGN;
-    sigemptyset(&ignore.sa_mask);
-    ignore.sa_flags = 0;
-    if (sigaction(SIGQUIT, &ignore, NULL) == -1)
-    {
-        perror("sigaction SIGQUIT");
-    }
+    // // Ignore SIGQUIT (Ctrl-\)
+    // ignore.sa_handler = SIG_IGN;
+    // sigemptyset(&ignore.sa_mask);
+    // ignore.sa_flags = 0;
+    // if (sigaction(SIGQUIT, &ignore, NULL) == -1)
+    // {
+    //     perror("sigaction SIGQUIT");
+    // }
 }
 
 int	main(int ac,char **av,  char **env)
@@ -318,7 +310,7 @@ int	main(int ac,char **av,  char **env)
 	char	**search;
     int j = 0;
 
-
+    
     ft_sigaction();
     // if (env == NULL)
     // {

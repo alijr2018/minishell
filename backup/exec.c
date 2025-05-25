@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/20 16:12:35 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/25 15:06:50 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static char	*searchexec(char *str)
     int i;
 
     path = getenv("PATH");
-    // ft_printf("\n%s\n", path);
+    // printf("\n%s\n", path);
     if(!str || !*str)
         return (NULL);
     if (ft_strchr(str, '/'))
@@ -203,11 +203,11 @@ void print_arguments(char **args, int i)
         tmp = remove_quotes(arg);
 		// printf("%s\n", arg);
 		// processed_arg = process_escape_sequences(tmp, &interpret_backslashes);
-        // ft_printf("%s", processed_arg);
-        ft_printf("%s", tmp);
-        // ft_printf("%c", *args[i]);
+        // printf("%s", processed_arg);
+        printf("%s", tmp);
+        // printf("%c", *args[i]);
         if (*args[i + 1])
-            ft_printf(" ");
+            printf(" ");
         i++;
     }
 }
@@ -231,7 +231,7 @@ void ft_echo(char **args)
 		// print_arguments(args, i, interpret_backslashes);
 		print_arguments(args, i);
 		if (!no_newline)
-			ft_printf("\n");
+			printf("\n");
 	}
 }
 // void ft_test(char **alt)
@@ -255,7 +255,7 @@ void	exec(char **alt)
 	// // 	return (ft_pwd(alt));
 	// if (ft_strcmp(*alt, "$?") == 0)
 	// {
-	// 	ft_printf("0: command not found\n");
+	// 	printf("0: command not found\n");
 	// 	return ;
 	// }
 	// else
@@ -264,7 +264,7 @@ void	exec(char **alt)
 		// printf("%s", exec_path);
 		if (!exec_path)
 		{
-			ft_printf("Command not found: %s\n", *alt);
+			printf("Command not found: %s\n", *alt);
 			exit(127);
 		}
 		if (execve(exec_path, alt, NULL) == -1)

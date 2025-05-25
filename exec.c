@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/24 17:45:55 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/25 15:06:50 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,14 @@ static char	*searchexec(char *str, char **envp)
     // path = getenv("PATH");
     // path = env;
 	
-	   for (int i = 0; envp[i] != NULL; i++) {
+	for (int i = 0; envp[i] != NULL; i++) {
         if (strncmp(envp[i], "PATH=", 5) == 0) {
             path = envp[i] + 5;  // Skip "PATH="
             break;
         }
     }
-	
-	if (path == NULL)
+
+	if (!envp)
 		path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 		
     if(!str || !*str) 
@@ -212,9 +212,9 @@ void print_arguments(char **args, int i, int interpret_backslashes)
         arg = args[i];
         arg = remove_quotes(arg);
 		processed_arg = process_escape_sequences(arg, &interpret_backslashes);
-        // ft_printf("%s", processed_arg);
+        // printf("%s", processed_arg);
         if (args[i + 1])
-            ft_printf(" ");
+            printf(" ");
         i++;
     }
 }
@@ -231,7 +231,7 @@ void ft_echo(char **args)
     i = handle_options(args, &i, &no_newline, &interpret_backslashes);
     print_arguments(args, i, interpret_backslashes);
     if (!no_newline)
-        ft_printf("\n");
+        printf("\n");
 }
 void command_env(char **env)
 {
@@ -253,14 +253,14 @@ void	exec(char **alt,char **env)
 		return (ft_echo(alt));
 	if (ft_strcmp(*alt, "$?") == 0)// fix it print the number of the last output
 	{
-		ft_printf("0: command not found\n");
+		printf("0: command not found\n");
 		return ;
 	}
 	exec_path = searchexec(*alt, env);
 	// printf("%s\n", exec_path);
 	if (!exec_path)
 	{
-		ft_printf("Command not found: %s\n", *alt);
+		printf("Command not found: %s\n", *alt);
 		exit(127);
 	}
 	if (execve(exec_path, alt, env) == -1)

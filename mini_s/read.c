@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:06:52 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/19 16:40:43 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/25 15:06:50 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	*read_full_command(void)
 
 void	ft_exit(char *input)
 {
-	ft_printf("exit\n");
+	printf("exit\n");
 	free(input);
 }
 

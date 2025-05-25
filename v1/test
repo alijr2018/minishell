@@ -2,7 +2,7 @@ total 84
 -rw-r--r-- 1 ali ali  1282 Mar 29 17:47 Makefile
 -rw-r--r-- 1 ali ali  8695 Mar 29 16:42 allow
 -rw-r--r-- 1 ali ali  4531 Mar 31 02:06 exec.c
--rw-r--r-- 1 ali ali  1622 Mar 25 08:58 ft_printf.c
+-rw-r--r-- 1 ali ali  1622 Mar 25 08:58 printf.c
 -rw-r--r-- 1 ali ali  2010 Mar 25 09:13 ft_putstr.c
 -rw-r--r-- 1 ali ali  1931 Mar 25 10:52 ft_split.c
 -rwxr-xr-x 1 ali ali 22464 Apr  5 03:44 minishell

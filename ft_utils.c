@@ -1,33 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   ft_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/27 12:29:50 by abrami            #+#    #+#             */
-/*   Updated: 2025/03/25 09:13:42 by abrami           ###   ########.fr       */
+/*   Created: 2025/05/20 17:15:51 by abrami            #+#    #+#             */
+/*   Updated: 2025/05/20 12:25:13 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_putstr(char *s)
+int ft_strcmp(char *src, char *dest)
 {
-	int	i;
+    int i;
 
-	i = 0;
-	if (s == NULL)
-	{
-		write(1, "(null)", 6);
-		return (6);
-	}
-	while (s[i])
-	{
-		write (1, &s[i], 1);
-		i++;
-	}
-	return (i);
+    i = 0;
+    while(src[i] && dest[i] && src[i] == dest[i])
+        i++;
+    return (src[i] - dest[i]);
 }
 
 char	*ft_strchr(const char *s, int c)
@@ -47,7 +39,6 @@ char	*ft_strchr(const char *s, int c)
 		return ((char *)&s[i]);
 	return (NULL);
 }
-
 char	*ft_strdup(const char *s1)
 {
 	char	*ptr;
@@ -65,19 +56,15 @@ char	*ft_strdup(const char *s1)
 	ptr[i] = '\0';
 	return (ptr);
 }
-
-size_t	ft_strlen(const char *s)
+size_t  ft_strlen(const char *str)
 {
-	size_t	i;
+    size_t  i;
 
-	i = 0;
-	while (s[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
+    i = 0;
+    while(str[i])
+        i++;
+    return (i);
 }
-
 char	*ft_strtok(char *str, const char *delim)
 {
 	static char	*next;

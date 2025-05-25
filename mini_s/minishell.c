@@ -36,6 +36,8 @@ static void	ft_exit(char *input)
 
 int	main(int ac, char **av, char **env)
 {
+	(void)ac;
+	(void)av;
 	char	*input;
 
 	ft_sigaction();

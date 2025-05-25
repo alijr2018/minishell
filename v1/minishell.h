@@ -23,7 +23,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-int		ft_printf(const char *in, ...);
+int		printf(const char *in, ...);
 int		ft_putstr(char *s);
 int		ft_putchar(char c);
 char	**ft_split(const char *s, char c);

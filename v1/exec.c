@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/03/31 02:06:45 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/25 15:06:50 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,9 +165,9 @@ void print_arguments(char **args, int i, int interpret_backslashes)
         arg = args[i];
         arg = remove_quotes(arg);
 		processed_arg = process_escape_sequences(arg, &interpret_backslashes);
-        ft_printf("%s", processed_arg);
+        printf("%s", processed_arg);
         if (args[i + 1])
-            ft_printf(" ");
+            printf(" ");
         i++;
     }
 }
@@ -184,7 +184,7 @@ void ft_echo(char **args)
     i = handle_options(args, &i, &no_newline, &interpret_backslashes);
     print_arguments(args, i, interpret_backslashes);
     if (!no_newline)
-        ft_printf("\n");
+        printf("\n");
 }
 void	exec(char **alt)
 {
@@ -196,13 +196,13 @@ void	exec(char **alt)
 		return (ft_echo(alt));
 	if (ft_strcmp(*alt, "$?") == 0)
 	{
-		ft_printf("0: command not found\n");
+		printf("0: command not found\n");
 		return ;
 	}
 	exec_path = searchexec(*alt);
 	if (!exec_path)
 	{
-		ft_printf("Command not found: %s\n", *alt);
+		printf("Command not found: %s\n", *alt);
 		exit(127);
 	}
 	if (execve(exec_path, alt, NULL) == -1)

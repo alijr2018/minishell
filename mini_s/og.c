@@ -160,7 +160,7 @@ void execute_pipeline(char *input) {
 void    lis(int i)
 {
     (void)i;
-    ft_printf("\n");  
+    printf("\n");  
     rl_on_new_line();
     rl_replace_line("", 0);
     rl_redisplay();

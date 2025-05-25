@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -44,7 +44,7 @@ static int	format(char str)
 	return (0);
 }
 
-int	ft_printf(const char *in, ...)
+int	printf(const char *in, ...)
 {
 	va_list	args;
 	size_t	i;

@@ -6,18 +6,17 @@
 #    By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/25 10:51:21 by abrami            #+#    #+#              #
-#    Updated: 2025/05/24 18:08:19 by abrami           ###   ########.fr        #
+#    Updated: 2025/05/25 15:11:16 by abrami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME = minishell
 
-SRCS = minishell.c\
-		ft_printf.c \
-		ft_putstr.c \
+SRCS =	minishell.c\
 		ft_split.c \
 		exec.c \
+		ft_utils.c \
 
 CC = cc
 # CFLAGS =  -g3 -fsanitize=address

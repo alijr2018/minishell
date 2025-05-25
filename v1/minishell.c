@@ -30,7 +30,7 @@ int	ft_strcmp(char *srt, char *str)
 
 static void	ft_exit(char *input)
 {
-	ft_printf("exit\n");
+	printf("exit\n");
 	free(input);
 }
 
@@ -178,7 +178,7 @@ void handle_redirections_and_pipes(char **args)
 void    lis(int i)
 {
     (void)i;
-    ft_printf("\n");  
+    printf("\n");  
     rl_on_new_line();
     rl_replace_line("", 0);
     rl_redisplay();

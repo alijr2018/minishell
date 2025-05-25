@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/24 16:16:21 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/25 14:56:01 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,19 @@
 
 static char	*searchexec(char *str, char **env)
 {
-    char *path;
-    char *full_path, *dir, **paths;
-    int i;
+    char    *path;
+    char    *full_path, *dir, **paths;
+    int     i;
 
     // path = getenv("PATH");
-    path = env;
-    if (!path)
+    if (!env)
         path = apath;
+    for (int i = 0; env[i] != NULL; i++) {
+        if (strncmp(env[i], "PATH=", 5) == 0) {
+            path = env[i] + 5;  // Skip "PATH="
+            break;
+        }
+    }
     if(!str || !*str)
     return (NULL);
     if (ft_strchr(str, '/'))
