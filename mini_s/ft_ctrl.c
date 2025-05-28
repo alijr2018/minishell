@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 11:42:33 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/21 17:40:44 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/27 16:31:17 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,11 @@ int g_var;
 
 /**this function for listing to Ctrl-C you have to add Ctrl-\ **/
 
-void	lis(int i)
+void	lis(int i, siginfo_t *aplaha, void *uncontext)
 {
+    (void)aplaha;
+    (void)uncontext;
+
     if (i == SIGQUIT)
     {
         return ;

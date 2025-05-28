@@ -6,7 +6,7 @@
 #    By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/25 10:51:21 by abrami            #+#    #+#              #
-#    Updated: 2025/05/25 15:06:50 by abrami           ###   ########.fr        #
+#    Updated: 2025/05/27 16:35:07 by abrami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,9 +19,10 @@ SRCS =	minishell.c \
 		ft_executing.c  \
 		ft_split.c \
 		ft_ctrl.c \
-		# printf.c \
-		# ft_putstr.c \
-		# exec.c \
+		ft_exit.c \
+		ft_strjoin.c \
+		ft_test.c \
+		
 
 CC = cc
 CFLAGS = -Werror -Wextra -Wall

@@ -43,9 +43,11 @@ int ft_strncmp(char *srt, char *str, int n)
 	return (str[i] - srt[i]);
 }
 
-t_command *parse_single_command(char *segment) {
+t_command *parse_single_command(char *segment)
+{
     t_command *cmd = malloc(sizeof(t_command));
     cmd->args = malloc(sizeof(char *) * MAX_ARGS);
+    //moved to ft_init
     cmd->input_file = NULL;
     cmd->output_file = NULL;
     cmd->heredoc_delimiter = NULL;
@@ -54,7 +56,8 @@ t_command *parse_single_command(char *segment) {
     char **tokens = ft_split(segment, ' ');
     int i = 0, j = 0;
 
-    while (tokens[i]) {
+    while (tokens[i])
+    {
         if (!strcmp(tokens[i], "<") && tokens[i + 1]) {
             cmd->input_file = ft_strdup(tokens[++i]);
         } else if (!strcmp(tokens[i], "<<") && tokens[i + 1]) {
@@ -109,7 +112,8 @@ void handle_input(t_command *cmd)
         char *line;
         while (1) {
             line = readline("> ");
-            if (!line || !strcmp(line, cmd->heredoc_delimiter)) {
+            if (!line || !strcmp(line, cmd->heredoc_delimiter))
+            {
                 free(line);
                 break;
             }
@@ -154,7 +158,15 @@ void exec_command(t_command *cmd, char **env)
     //     exit(127);
     // }
 }
-
+void ft_free(t_command **commands, int n)
+{
+    int j = 0;
+    while(j < n)
+    {
+        free(commands[j]);
+        j++;
+    }
+}
 void execute_pipeline(char *input, char **env)
 {
     char *line = strdup(input);
@@ -169,38 +181,45 @@ void execute_pipeline(char *input, char **env)
         segment = strtok(NULL, "|");
     }
 
-    int i, pipefd[2], in_fd = 0;
+    int i = 0, pipefd[2], in_fd = 0;
     pid_t pid;
 
-    for (i = 0; i < n; i++) {
-        if (i < n - 1) pipe(pipefd);
-
+    while (i < n)
+    {
+        if (i < n - 1)
+            pipe(pipefd);
         pid = fork();
-        if (pid == 0) {
-            if (i > 0) {
+        if (pid == 0)
+        {
+            if (i > 0)
+            {
                 dup2(in_fd, STDIN_FILENO);
                 close(in_fd);
             }
-            if (i < n - 1) {
+            if (i < n - 1)
+            {
                 close(pipefd[0]);
                 dup2(pipefd[1], STDOUT_FILENO);
                 close(pipefd[1]);
             }
             exec_command(commands[i], env);
-        } else {
-            if (i > 0) close(in_fd);
-            if (i < n - 1) {
+        }
+        else
+        {
+            if (i > 0)
+                close(in_fd);
+            if (i < n - 1)
+            {
                 close(pipefd[1]);
                 in_fd = pipefd[0];
             }
             // waitpid(pid, NULL, 0);
         }
+        i++;
     }
     while(wait(NULL) != -1){};//this solve 
     free(line);
-    for (int j = 0; j < n; j++) {
-        free(commands[j]);
-    }
+    ft_free(commands, n);
 }
 
 static char *read_full_command(char *input)
@@ -261,8 +280,10 @@ static void ft_built_in(char *input)
 //     rl_redisplay();
 // }
 
-void	lis(int i)
+void	lis(int i, siginfo_t *aplaha, void *uncontext)
 {
+    (void)aplaha;
+    (void)uncontext;
     if (i == SIGQUIT)
     {
         return ;
@@ -300,28 +321,31 @@ void ft_sigaction()
     //     perror("sigaction SIGQUIT");
     // }
 }
-
-int	main(int ac,char **av,  char **env)
+// this fonction init the variables
+void    ft_init(int ac,char **av,  char **env, t_command *cmd)
 {
     (void)ac;
     (void)av;
-    char	*input;
-    char	*passing;
-	char	**search;
+    // cmd->args = NULL;
+    // cmd->input_file = NULL;
+    // cmd->output_file = NULL;
+    // cmd->heredoc_delimiter = NULL;
+    // cmd->append_output = 0;
+    // return;
+    // add here parsing the of the env && unset etc..
+}
+
+int	main(int ac,char **av,  char **env)
+{
+    t_command   cmd;
+    char        *input;
+    char	    *passing;
+	char	    **search;
     int j = 0;
 
-    
+    ft_init(ac, av, env, &cmd);
     ft_sigaction();
-    // if (env == NULL)
-    // {
-    //     while(env[j])
-    //     {
-    //         printf("env :%s\n", env[j]);
-    //         j++;
-    //     }
-    // }
-    // else
-    //     printf("dskjbd\n");
+
 	while (1)
 	{
         g_var = 1;
@@ -331,6 +355,7 @@ int	main(int ac,char **av,  char **env)
 		{
             // ft_exit(input);
 			// break;
+            // ft_free1(&cmd);
             printf("exit\n");
             exit(0);
 		}

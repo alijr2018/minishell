@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:15:51 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/20 12:25:13 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/27 16:29:22 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,40 @@ char	*ft_strtok(char *str, const char *delim)
 	else
 		next = (NULL);
 	return (st);
+}
+
+static int	add_new_str(t_list **new, char *elem)
+{
+	(*new) = malloc(sizeof(t_list));
+	if (*new == NULL)
+		return (0);
+	(*new)->str = elem;
+	(*new)->next_one = NULL;
+	(*new)->previous = NULL;
+	return (1);
+}
+
+static void	add_first(t_list **list, t_list *new)
+{
+	(*list) = new;
+	(*list)->previous = *list;
+	(*list)->next_one = *list;
+}
+
+int add_to_list(t_list **list, char *str)
+{
+	t_list	*tmp;
+
+	if (!add_new_str(&tmp, str))
+		return (0);
+	if (!(*list))
+		add_first(list, tmp);
+	else
+	{
+		tmp->previous = (*list)->previous;
+		tmp->next_one = (*list);
+		(*list)->previous->next_one = tmp;
+		(*list)->previous = tmp;
+	}
+	return (1);
 }

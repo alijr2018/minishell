@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/25 14:56:01 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/27 16:30:03 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void    ft_execute(char **alt, char **env)
     perror("Error executing file");
     exit(1);
 }
-void    ft_executing(char **alt, char **env)
-{
+// void    ft_executing(char **alt, char **env)
+// {
         
-}
+// }

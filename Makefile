@@ -6,7 +6,7 @@
 #    By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/25 10:51:21 by abrami            #+#    #+#              #
-#    Updated: 2025/05/25 15:11:16 by abrami           ###   ########.fr        #
+#    Updated: 2025/05/27 02:13:37 by abrami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ SRCS =	minishell.c\
 		ft_split.c \
 		exec.c \
 		ft_utils.c \
+		ft_free.c \
 
 CC = cc
 # CFLAGS =  -g3 -fsanitize=address
