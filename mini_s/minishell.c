@@ -17,10 +17,10 @@ extern  int g_var;
 //check with leaks
 static void	ft_exit(char *input)
 {
-	// (void) input;
+	(void) input;
 	printf("exit\n");
-	if (input)
-		free(input);
+	// if (input != NULL)
+	// 	free(input);
 	rl_clear_history();
 	exit (0);
 }
@@ -61,6 +61,8 @@ static void ft_init(int ac, char **av, char **env, t_command *cmd)
 	}
 	cmd->env = list;
 }
+
+// siganels don't work in vs code in linux flavor
 int	main(int ac, char **av, char **env)
 {
 	t_command	cmd;
@@ -74,13 +76,21 @@ int	main(int ac, char **av, char **env)
 		input = readline("minishell!>> ");
 		g_var = -1;
 		if (!input || ft_strcmp(input, "exit") == 0)
+		{
+			// if (cmd.args != NULL)
+			// 	free_char_array(cmd.args);
 			ft_exit(input);
+		}
 		if (*input)
 			add_history(input);
-		if (!parse(&cmd, input))
+		// if (!parse(&cmd, input))
+		// 	continue;
+		if (!(parses(&cmd, input)))
 			continue;
+			// free_char_array(cmd.args);
+
 		// if (!ft_executing(&data))
-			// return ; // change it with free
+		// 	return ; // change it with free
 		// printf("this is ---> %s :\n", input);
 		// ft_executing(&input, env);
 		// ft_execute(&input, env);

@@ -54,6 +54,7 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }				t_cmd;
 
+
 typedef struct s_list
 {
 	char	*str;
@@ -84,6 +85,12 @@ typedef struct s_command
 	int		pip[2];
 }				t_command;
 
+typedef struct s_stack
+{
+	t_command					**args;
+	size_t				index;
+	struct s_stack		*next;
+}					t_stack;
 
 int		ft_strcmp(char *src, char *dest);
 int ft_strncmp(char *srt, char *str, int n);
@@ -99,9 +106,14 @@ char	*ft_strdup(const char *s1);
 int add_to_list(t_list **list, char *str);
 char	*ft_strjoin(char const *s1, char const *s2);
 void    ft_execute(char **alt, char **env);
-bool    parse(t_command *cmd, char  *input);
 
 int add_to_list_cmd(t_cmd **list, int infile, int outfile, char **cmd_param);
+//parsing
+char	**ft_splited(const char *s);
+// void	ft_lstclear(t_stack **lst);
+void free_char_array(char **arr);
+int		parses(t_command *cmd, char *input);
+
 //just for tests
 
 
