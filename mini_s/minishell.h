@@ -25,9 +25,34 @@
 # include <readline/history.h>
 # include <limits.h>
 #define MAX_ARGS 1024
+# define INPUT		1	//"<"
+# define HEREDOC	2	//"<<"
+# define TRUNC		3	//">"
+# define APPEND		4	//">>"
 # define PIPE		5	//"|"
+# define CMD		6	//"|"
+# define ARG		7	//"|"
+# define ERR_MALLOC	"malloc error\n"
+# define ERR_PIPE	"pipe error\n"
+# define ERR_FORK	"fork error\n"
+
+# define EXT_MALLOC	1
+# define EXT_PIPE	1
+# define EXT_FORK	1
+
 
 #define apath "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+
+typedef struct s_cmd
+{
+	bool			skip_cmd;
+	int				in_file;
+	int				out_file;
+	char			**cmd_param;
+	struct s_cmd	*previous;
+	struct s_cmd	*next;
+}				t_cmd;
 
 typedef struct s_list
 {
@@ -40,7 +65,7 @@ typedef struct s_token
 {
 	char			*str;
 	int				type;
-	struct s_token	*prev;
+	struct s_token	*previous;
 	struct s_token	*next;
 }				t_token;
 
@@ -49,15 +74,19 @@ typedef struct s_command
 	char	**args;
 	t_list	*env;
 	t_token	*token;
+	t_cmd	*commands;
 	char	*input_file;
 	char	*output_file;
 	char	*heredoc_delimiter;
 	int		append_output;
 	int		code_exit;
+	bool	sq;
+	int		pip[2];
 }				t_command;
 
 
 int		ft_strcmp(char *src, char *dest);
+int ft_strncmp(char *srt, char *str, int n);
 // void	ft_executing(char **alt);
 void	ft_executing(char **alt, char **env);
 char	*ft_strchr(const char *s, int c);
@@ -71,6 +100,8 @@ int add_to_list(t_list **list, char *str);
 char	*ft_strjoin(char const *s1, char const *s2);
 void    ft_execute(char **alt, char **env);
 bool    parse(t_command *cmd, char  *input);
+
+int add_to_list_cmd(t_cmd **list, int infile, int outfile, char **cmd_param);
 //just for tests
 
 

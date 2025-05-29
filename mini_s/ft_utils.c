@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:15:51 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/27 16:29:22 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/28 17:08:43 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,41 @@ int add_to_list(t_list **list, char *str)
 		tmp->next_one = (*list);
 		(*list)->previous->next_one = tmp;
 		(*list)->previous = tmp;
+	}
+	return (1);
+}
+static int cmd_element(t_cmd **new, int infile, int outfile, char **cmd_param)
+{
+	(*new) = malloc(sizeof(t_cmd));
+	if (*new == NULL)
+		return (0);
+	(*new)->skip_cmd = false;
+	(*new)->in_file = infile;
+	(*new)->out_file = outfile;
+	(*new)->cmd_param = cmd_param;
+	(*new)->next = NULL;
+	(*new)->previous = NULL;
+	return (1);
+}
+
+int add_to_list_cmd(t_cmd **list, int infile, int outfile, char **cmd_param)
+{
+	t_cmd	*new;
+	
+	if (!cmd_element(&new, infile, outfile, cmd_param))
+		return (0);
+	if (!(*list))
+	{
+		(*list) = new;
+		(*list)->next = *list;
+		(*list)->previous = *list;
+	}
+	else
+	{
+		new->previous = (*list)->previous;
+		new->next = (*list);
+		(*list)->previous->next = new;
+		(*list)->previous = new;
 	}
 	return (1);
 }
