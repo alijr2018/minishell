@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/30 14:35:17 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/30 15:39:51 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ static char	*searchexec(char *str, char **env)
 static void    ft_execute(char *alt, char **env)
 {
     char    *exec_path;
+    char    **argv;
 
     exec_path = searchexec(alt, env);
     if (!exec_path)
@@ -81,7 +82,16 @@ static void    ft_execute(char *alt, char **env)
         printf("Command not found: %s\n", alt);
         exit(127);
     }
-    char *argv[] = {alt, NULL};
+    // char *argv[] = {alt, NULL};
+    argv = malloc(sizeof(char *) * 2);
+	if (!argv)
+	{
+		perror("malloc");
+		free(exec_path);
+		exit(1);
+	}
+	argv[0] = alt;
+	argv[1] = NULL;
     if (execve(exec_path, argv, env) == -1)
     perror("Error executing file");
     exit(1);
