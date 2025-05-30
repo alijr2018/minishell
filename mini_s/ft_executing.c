@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/29 16:35:46 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/30 14:35:17 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,22 +69,50 @@ static char	*searchexec(char *str, char **env)
     return (NULL);
 }
 
-void    ft_execute(char **alt, char **env)
+// void    ft_execute(char **alt, char **env)
+static void    ft_execute(char *alt, char **env)
 {
     char    *exec_path;
-    
-    exec_path = searchexec(*alt, env);
+
+    exec_path = searchexec(alt, env);
     if (!exec_path)
     {
         //add free
-        printf("Command not found: %s\n", *alt);
+        printf("Command not found: %s\n", alt);
         exit(127);
     }
-    if (execve(exec_path, alt, NULL) == -1)
+    char *argv[] = {alt, NULL};
+    if (execve(exec_path, argv, env) == -1)
     perror("Error executing file");
     exit(1);
 }
-// void    ft_executing(char **alt, char **env)
-// {
-    
-// }
+
+// add part before here to check for builtin and env etc..
+void ft_executing(t_command *cmd, char **env)
+{
+    int i = 0;
+    pid_t pid;
+
+    if (!cmd || !cmd->args)
+        return;
+
+    while (cmd->args[i])
+    {
+        pid = fork();
+        if (pid == -1) {
+            perror("fork");
+            i++;
+            continue;
+        }
+
+        if (pid == 0) {
+            ft_execute(cmd->args[i], env);
+        }
+        i++;
+    }
+
+    // Parent waits for all children
+    while (wait(NULL) > 0)
+        ;
+}
+

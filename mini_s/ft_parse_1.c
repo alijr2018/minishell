@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 14:49:54 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/29 18:23:44 by abrami           ###   ########.fr       */
+/*   Updated: 2025/05/30 14:19:57 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,11 @@ int parses(t_command *cmd, char *input)
         free_char_array(cmd->args);
 		return 1;
     }
-
 	return 0;
 }
 
+// int i = 0;
+// while(cmd->args[i])
+// 	printf("parsed:%s\n", cmd->args[i++]);
 
 

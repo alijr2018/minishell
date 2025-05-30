@@ -85,10 +85,10 @@ int	main(int ac, char **av, char **env)
 			add_history(input);
 		// if (!parse(&cmd, input))
 		// 	continue;
-		if (!(parses(&cmd, input)))
+		if ((parses(&cmd, input)))
 			continue;
 			// free_char_array(cmd.args);
-
+		ft_executing(&cmd, env);
 		// if (!ft_executing(&data))
 		// 	return ; // change it with free
 		// printf("this is ---> %s :\n", input);

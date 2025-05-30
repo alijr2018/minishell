@@ -95,7 +95,8 @@ typedef struct s_stack
 int		ft_strcmp(char *src, char *dest);
 int ft_strncmp(char *srt, char *str, int n);
 // void	ft_executing(char **alt);
-void	ft_executing(char **alt, char **env);
+// void	ft_executing(char **alt, char **env);
+void ft_executing(t_command *cmd, char **env);
 char	*ft_strchr(const char *s, int c);
 char	**ft_split(const char *s, char c);
 size_t 	ft_strlen(const char *str);
@@ -105,7 +106,7 @@ void	ft_sigaction();
 char	*ft_strdup(const char *s1);
 int add_to_list(t_list **list, char *str);
 char	*ft_strjoin(char const *s1, char const *s2);
-void    ft_execute(char **alt, char **env);
+// void    ft_execute(char *alt, char **env);
 
 int add_to_list_cmd(t_cmd **list, int infile, int outfile, char **cmd_param);
 //parsing
