@@ -40,7 +40,7 @@
 # define EXT_PIPE	1
 # define EXT_FORK	1
 
-
+# define IS_QUOTE(x) (x == '"' || x == '\'')
 #define apath "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 
@@ -114,7 +114,9 @@ char	**ft_splited(const char *s);
 // void	ft_lstclear(t_stack **lst);
 void free_char_array(char **arr);
 int		parses(t_command *cmd, char *input);
-
+int cd_builtin(char **args);
+int echo_builtin(char **args);
+void	ft_putnstr(const char *s, int n);
 //just for tests
 
 

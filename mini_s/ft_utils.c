@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 17:15:51 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/28 17:08:43 by abrami           ###   ########.fr       */
+/*   Updated: 2025/06/08 15:39:30 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,4 +160,30 @@ int add_to_list_cmd(t_cmd **list, int infile, int outfile, char **cmd_param)
 		(*list)->previous = new;
 	}
 	return (1);
+}
+
+void	ft_putnstr(const char *s, int n)
+{
+	int	i;
+
+	if (!s)
+		return;
+
+	i = 0;
+	if (n < 0)
+	{
+		while (s[i])
+		{
+			write(1, &s[i], 1);
+			i++;
+		}
+	}
+	else
+	{
+		while (s[i] && i < n)
+		{
+			write(1, &s[i], 1);
+			i++;
+		}
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/30 15:39:51 by abrami           ###   ########.fr       */
+/*   Updated: 2025/06/08 15:44:48 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,26 @@ static void    ft_execute(char *alt, char **env)
     exit(1);
 }
 
+static int ft_check(char **args)
+{
+    if (!args || !args[0])
+        return 1;
+
+    if (strcmp(args[0], "cd") == 0)
+    {
+        cd_builtin(&args[1]);
+        return 0;
+    }
+    else if (strcmp(args[0], "echo") == 0)
+    {
+        echo_builtin(&args[1]);
+        return 0;
+    }
+
+    return 1; // Not a built-in
+}
+
+
 // add part before here to check for builtin and env etc..
 void ft_executing(t_command *cmd, char **env)
 {
@@ -105,7 +125,8 @@ void ft_executing(t_command *cmd, char **env)
 
     if (!cmd || !cmd->args)
         return;
-
+    else if (!ft_check(cmd->args))
+        return;
     while (cmd->args[i])
     {
         pid = fork();

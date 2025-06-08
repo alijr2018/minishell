@@ -6,7 +6,7 @@
 #    By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/25 10:51:21 by abrami            #+#    #+#              #
-#    Updated: 2025/05/30 14:20:16 by abrami           ###   ########.fr        #
+#    Updated: 2025/06/08 15:26:05 by abrami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRCS =	minishell.c \
 		ft_ctrl.c \
 		ft_exit.c \
 		ft_strjoin.c \
+		ft_built_in.c \
 		ft_test.c \
 		
 
