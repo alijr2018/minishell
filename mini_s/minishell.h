@@ -117,6 +117,7 @@ int		parses(t_command *cmd, char *input);
 int cd_builtin(char **args);
 int echo_builtin(char **args);
 void	ft_putnstr(const char *s, int n);
+
 //just for tests
 
 

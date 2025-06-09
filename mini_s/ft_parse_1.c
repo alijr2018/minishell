@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 14:49:54 by abrami            #+#    #+#             */
-/*   Updated: 2025/05/30 14:19:57 by abrami           ###   ########.fr       */
+/*   Updated: 2025/06/09 16:07:46 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,10 @@ int parses(t_command *cmd, char *input)
 	if (!cmd->args)
     {
         free_char_array(cmd->args);
-		return 1;
+		return (1);
     }
-	return 0;
+	// free_char_array(cmd->args);
+	return (0);
 }
 
 // int i = 0;

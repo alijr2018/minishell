@@ -25,6 +25,8 @@ static void	ft_exit(char *input)
 	exit (0);
 }
 
+// can i use macros like WIFEXITED and WEXITSTATUS if they not exists in the allowed functions ?
+
 static void ft_init(int ac, char **av, char **env, t_command *cmd)
 {
 	(void)ac;
@@ -80,13 +82,17 @@ int	main(int ac, char **av, char **env)
 			// if (cmd.args != NULL)
 			// 	free_char_array(cmd.args);
 			ft_exit(input);
+			// should add something to hendle exit with command
 		}
 		if (*input)
 			add_history(input);
 		// if (!parse(&cmd, input))
 		// 	continue;
 		if ((parses(&cmd, input)))
+		{
+	        // free_char_array(cmd.args);
 			continue;
+		}
 			// free_char_array(cmd.args);
 		ft_executing(&cmd, env);
 		// if (!ft_executing(&data))
@@ -95,6 +101,7 @@ int	main(int ac, char **av, char **env)
 		// ft_executing(&input, env);
 		// ft_execute(&input, env);
 	}
+	// free_char_array(cmd.args);
 	rl_clear_history();
 	return (0);
 }
