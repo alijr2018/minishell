@@ -6,11 +6,13 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/06/09 16:22:41 by abrami           ###   ########.fr       */
+/*   Updated: 2025/06/09 16:45:29 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern  int g_var;
 
 //this is the file that execute the command not the ones that should create
 
@@ -241,8 +243,87 @@ static int ft_check(char **args, char **env)
         export_builtin(&args[1], &env); // pass env pointer
         return 0;
     }
-
+    
     return (1);
+}
+
+static int      num_length(int n)
+{
+        int     len;
+
+        len = 0;
+        if (n <= 0)
+                len = 1;
+        while (n != 0)
+        {
+                n /= 10;
+                len++;
+        }
+        return (len);
+}
+
+char    *ft_itoa(int n)
+{
+        int                             len;
+        char                    *str;
+        unsigned int    x;
+
+        len = num_length(n);
+        str = (char *)malloc(len + 1);
+        if (!str)
+                return (NULL);
+        str[len] = '\0';
+        if (n < 0)
+        {
+                x = -n;
+                str[0] = '-';
+        }
+        else
+        {
+                x = n;
+                str[0] = '0';
+        }
+        while (x > 0)
+        {
+                str[--len] = (x % 10) + '0';
+                x /= 10;
+        }
+        return (str);
+}
+char *expand_exit_status(const char *arg)
+{
+    char *result;
+    char *status_str = ft_itoa(g_var);  // convert int to string
+
+    if (!status_str)
+        return strdup(arg);  // fallback
+
+    // allocate enough memory: input + possible status string + null
+    size_t len = strlen(arg) + strlen(status_str) + 1;
+    result = malloc(len);
+    if (!result)
+    {
+        free(status_str);
+        return strdup(arg);
+    }
+
+    const char *p = arg;
+    char *r = result;
+
+    while (*p)
+    {
+        if (*p == '$' && *(p + 1) == '?')
+        {
+            strcpy(r, status_str);
+            r += strlen(status_str);
+            p += 2;
+        }
+        else
+            *r++ = *p++;
+    }
+    *r = '\0';
+    free(status_str);
+    return result;
 }
 
 
@@ -254,7 +335,13 @@ void ft_executing(t_command *cmd, char **env)
 
     if (!cmd || !cmd->args)
         return;
-    else if (!ft_check(cmd->args, env))
+    for (int j = 0; cmd->args[j]; j++)
+    {
+        char *expanded = expand_exit_status(cmd->args[j]);
+        free(cmd->args[j]);
+        cmd->args[j] = expanded;
+    }
+    if (!ft_check(cmd->args, env))
         return;
     while (cmd->args[i])
     {
@@ -270,8 +357,18 @@ void ft_executing(t_command *cmd, char **env)
         i++;
     }
     // Parent waits for all children
-    while (wait(NULL) > 0)
-        ;
+    // while (wait(NULL) > 0)
+    //     ;
+    int status;
+    while (waitpid(-1, &status, 0) > 0)
+    {
+        if (WIFEXITED(status))
+            g_var = WEXITSTATUS(status);
+        else if (WIFSIGNALED(status))
+            g_var = 128 + WTERMSIG(status);  // Like bash
+        else
+            g_var = 1;  // default fallback
+    }
     free_str_array(cmd->args);
 }
 
