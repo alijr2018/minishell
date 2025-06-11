@@ -6,7 +6,7 @@
 #    By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/25 10:51:21 by abrami            #+#    #+#              #
-#    Updated: 2025/06/09 04:20:07 by abrami           ###   ########.fr        #
+#    Updated: 2025/06/11 10:40:07 by abrami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ SRCS =	minishell.c \
 
 CC = cc
 CFLAGS = -Werror -Wextra -Wall
-CF = -g3 -fsanitize=address
+# CF = -g3 -fsanitize=address
 RED = -lreadline 
 RM = rm -f
 

@@ -6,7 +6,7 @@
 /*   By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 10:51:01 by abrami            #+#    #+#             */
-/*   Updated: 2025/06/09 16:45:29 by abrami           ###   ########.fr       */
+/*   Updated: 2025/06/11 12:02:23 by abrami           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ extern  int g_var;
 static void free_str_array(char **arr)
 {
     int i = 0;
-    if (!arr) return;
+    if (!arr)
+        return;
     while (arr[i])
         free(arr[i++]);
     free(arr);
@@ -33,7 +34,7 @@ static char	*searchexec(char *str, char **env)
 
     if(!str || !*str)
         return (NULL);
-    if (!env)
+    if (!*env)
         path = apath;
     
     for (int i = 0; env[i] != NULL; i++) {
@@ -161,62 +162,176 @@ void	print_env_bash_format(char **env)
 
 char **add_to_env(char **env, const char *new_var)
 {
-	int i = 0;
-	char *key_end = strchr(new_var, '=');
-	if (!key_end)
-		return env;
+    if (!new_var || !strchr(new_var, '='))
+        return env;
 
-	size_t key_len = key_end - new_var;
-	while (env && env[i])
+    char *equal_sign = strchr(new_var, '=');
+    size_t key_len = equal_sign - new_var;
+    int count = 0;
+    int found = -1;
+
+    // Count and search
+    while (env && env[count]) {
+        if (found == -1 && strncmp(env[count], new_var, key_len) == 0 && 
+            env[count][key_len] == '=') {
+            found = count;
+        }
+        count++;
+    }
+
+    // Allocate new array
+    char **new_env = malloc(sizeof(char *) * (count + (found == -1 ? 2 : 1)));
+    if (!new_env)
+        return env;
+
+    // Copy variables
+    int j = 0;
+    for (int i = 0; i < count; i++) {
+        if (i == found) {
+            new_env[j++] = strdup(new_var);
+        } else {
+            new_env[j++] = strdup(env[i]);
+        }
+    }
+
+    // Add new if not found
+    if (found == -1) {
+        new_env[j++] = strdup(new_var);
+    }
+    new_env[j] = NULL;
+
+    // Free old environment properly
+    if (env) {
+        for (int i = 0; env[i]; i++) {
+            free(env[i]);  // Free each string
+        }
+        free(env);  // Free the array
+    }
+
+    return new_env;
+}
+
+static int	num_length(int n)
+{
+	int	len;
+
+	len = 0;
+	if (n <= 0)
+		len = 1;
+	while (n != 0)
 	{
-		if (strncmp(env[i], new_var, key_len) == 0 && env[i][key_len] == '=')
-		{
-			// Don't free original env[i]; just duplicate the new one into a new array
-			int j = 0;
-			while (env[j])
-				j++;
-
-			char **new_env = malloc(sizeof(char *) * (j + 1));
-			for (int k = 0; k < j; k++)
-			{
-				if (k == i)
-					new_env[k] = strdup(new_var);
-				else
-					new_env[k] = strdup(env[k]);
-			}
-			new_env[j] = NULL;
-			// Optional: free old env if you own it
-			// free_str_array(env);
-			return new_env;
-		}
-		i++;
+		n /= 10;
+		len++;
 	}
+	return (len);
+}
 
-	// If key wasn't found, add new entry
-	int count = 0;
-	while (env && env[count])
-		count++;
-	char **new_env = malloc(sizeof(char *) * (count + 2));
-	for (int k = 0; k < count; k++)
-		new_env[k] = strdup(env[k]);
-	new_env[count] = strdup(new_var);
-	new_env[count + 1] = NULL;
-	// Optional: free old env if you own it
-	// free_str_array(env);
-	return new_env;
+char	*ft_itoa(int n)
+{
+	int				len;
+	char			*str;
+	unsigned int	x;
+
+	len = num_length(n);
+	str = (char *)malloc(len + 1);
+	if (!str)
+		return (NULL);
+	str[len] = '\0';
+	if (n < 0)
+	{
+		x = -n;
+		str[0] = '-';
+	}
+	else
+	{
+		x = n;
+		str[0] = '0';
+	}
+	while (x > 0)
+	{
+		str[--len] = (x % 10) + '0';
+		x /= 10;
+	}
+	return (str);
 }
 
 
-int export_builtin(char **args, char ***env)
+static char *get_env_value(const char *name, char **env)
+{
+	if (!name)
+		return (NULL);
+	size_t len = strlen(name);
+	for (int i = 0; env && env[i]; i++)
+	{
+		if (strncmp(env[i], name, len) == 0 && env[i][len] == '=')
+			return (env[i] + len + 1);
+	}
+	return ("");
+}
+
+static char *expand_variables(const char *str, char **env)
+{
+	if (!str)
+		return (NULL);
+
+	char *result = calloc(1, 1);
+	for (size_t i = 0; str[i];)
+	{
+		if (str[i] == '$')
+		{
+			if (str[i + 1] == '?')
+			{
+				char *status = ft_itoa(g_var);
+				char *tmp = ft_strjoin(result, status);
+				free(result);
+				free(status);
+				result = tmp;
+				i += 2;
+			}
+			else
+			{
+				size_t j = i + 1;
+				while (str[j] && (isalnum(str[j]) || str[j] == '_'))
+					j++;
+				char *varname = strndup(str + i + 1, j - (i + 1));
+				char *value = get_env_value(varname, env);
+				char *tmp = ft_strjoin(result, value);
+				free(result);
+				free(varname);
+				result = tmp;
+				i = j;
+			}
+		}
+		else
+		{
+			size_t len = strlen(result);
+			char *tmp = realloc(result, len + 2);
+			if (!tmp)
+				break;
+			tmp[len] = str[i];
+			tmp[len + 1] = '\0';
+			result = tmp;
+			i++;
+		}
+	}
+	return result;
+}
+
+
+int export_builtin(char **args, char ***env) 
 {
     if (!args || !args[0]) {
-        print_env_bash_format(*env); // like bash
+        print_env_bash_format(*env);
         return 0;
     }
 
     for (int i = 0; args[i]; i++) {
         if (strchr(args[i], '=')) {
-            *env = add_to_env(*env, args[i]);  // store it
+            *env = add_to_env(*env, args[i]);
+        } else {
+            // Handle invalid export syntax (no '=')
+            fprintf(stderr, "export: invalid syntax: %s\n", args[i]);
+            return 1;
         }
     }
     return 0;
@@ -247,102 +362,30 @@ static int ft_check(char **args, char **env)
     return (1);
 }
 
-static int      num_length(int n)
-{
-        int     len;
-
-        len = 0;
-        if (n <= 0)
-                len = 1;
-        while (n != 0)
-        {
-                n /= 10;
-                len++;
-        }
-        return (len);
-}
-
-char    *ft_itoa(int n)
-{
-        int                             len;
-        char                    *str;
-        unsigned int    x;
-
-        len = num_length(n);
-        str = (char *)malloc(len + 1);
-        if (!str)
-                return (NULL);
-        str[len] = '\0';
-        if (n < 0)
-        {
-                x = -n;
-                str[0] = '-';
-        }
-        else
-        {
-                x = n;
-                str[0] = '0';
-        }
-        while (x > 0)
-        {
-                str[--len] = (x % 10) + '0';
-                x /= 10;
-        }
-        return (str);
-}
-char *expand_exit_status(const char *arg)
-{
-    char *result;
-    char *status_str = ft_itoa(g_var);  // convert int to string
-
-    if (!status_str)
-        return strdup(arg);  // fallback
-
-    // allocate enough memory: input + possible status string + null
-    size_t len = strlen(arg) + strlen(status_str) + 1;
-    result = malloc(len);
-    if (!result)
-    {
-        free(status_str);
-        return strdup(arg);
-    }
-
-    const char *p = arg;
-    char *r = result;
-
-    while (*p)
-    {
-        if (*p == '$' && *(p + 1) == '?')
-        {
-            strcpy(r, status_str);
-            r += strlen(status_str);
-            p += 2;
-        }
-        else
-            *r++ = *p++;
-    }
-    *r = '\0';
-    free(status_str);
-    return result;
-}
-
 
 // add part before here to check for builtin and env etc..
 void ft_executing(t_command *cmd, char **env)
 {
     int i = 0;
+    int status;
     pid_t pid;
 
     if (!cmd || !cmd->args)
         return;
+        
     for (int j = 0; cmd->args[j]; j++)
     {
-        char *expanded = expand_exit_status(cmd->args[j]);
-        free(cmd->args[j]);
-        cmd->args[j] = expanded;
+        if (cmd->args[j][0] == '$') // Only expand if it starts with $
+        {
+            char *expanded = expand_variables(cmd->args[j], env);
+            free(cmd->args[j]);
+            cmd->args[j] = expanded;
+        }
     }
+        
     if (!ft_check(cmd->args, env))
         return;
+
     while (cmd->args[i])
     {
         pid = fork();
@@ -356,19 +399,15 @@ void ft_executing(t_command *cmd, char **env)
             ft_execute(cmd->args[i], env);
         i++;
     }
-    // Parent waits for all children
-    // while (wait(NULL) > 0)
-    //     ;
-    int status;
-    while (waitpid(-1, &status, 0) > 0)
-    {
-        if (WIFEXITED(status))
-            g_var = WEXITSTATUS(status);
-        else if (WIFSIGNALED(status))
-            g_var = 128 + WTERMSIG(status);  // Like bash
-        else
-            g_var = 1;  // default fallback
-    }
+	while (waitpid(-1, &status, 0) > 0)
+	{
+		if (WIFEXITED(status))
+			g_var = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			g_var = 128 + WTERMSIG(status);
+		else
+			g_var = 0;
+	}
     free_str_array(cmd->args);
 }
 

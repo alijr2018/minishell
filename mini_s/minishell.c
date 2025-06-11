@@ -74,9 +74,10 @@ int	main(int ac, char **av, char **env)
 	ft_sigaction();
 	while (1)
 	{
+		int last = g_var;
 		g_var = 1;
 		input = readline("minishell!>> ");
-		g_var = -1;
+		g_var = last;
 		if (!input || ft_strcmp(input, "exit") == 0)
 		{
 			// if (cmd.args != NULL)
@@ -86,6 +87,8 @@ int	main(int ac, char **av, char **env)
 		}
 		if (*input)
 			add_history(input);
+		// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+        // 	exit(1);
 		// if (!parse(&cmd, input))
 		// 	continue;
 		if ((parses(&cmd, input)))
