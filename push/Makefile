@@ -6,7 +6,7 @@
 #    By: abrami <abrami@student.1337.ma>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/25 10:51:21 by abrami            #+#    #+#              #
-#    Updated: 2025/06/11 15:58:34 by abrami           ###   ########.fr        #
+#    Updated: 2025/06/14 11:29:08 by abrami           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,8 +33,6 @@ SRCS =	apply_redirections.c \
 		ft_splited.c \
 		minishell.c \
 		main.c \
-		
-		
 		
 
 CC = cc
